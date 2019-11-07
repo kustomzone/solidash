@@ -1,6 +1,12 @@
 // Import the LitElement base class and html helper function
 //https://github.com/inrupt/solid-lib-comparison
+//https://github.com/inrupt/solid-lib-comparison/blob/rdflib/src/services/getFriendList.ts
+//https://github.com/linkeddata/rdflib.js/
+//https://linkeddata.github.io/rdflib.js/Documentation/webapp-intro.html
+
+
 import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
+import  '../libs/rdflib.min.js';
 import { HelloAgent } from '../js/agents/HelloAgent.js';
 
 // Extend the LitElement base class
@@ -11,7 +17,10 @@ class MyRdflib extends LitElement {
       message: { type: String },
       name: {type: String},
       source: {type: String},
-      webId: {type: String}
+      webId: {type: String},
+      username: {type: String},
+      friends: {type: Number},
+      names: {type: Array}
     };
   }
 
@@ -20,7 +29,12 @@ class MyRdflib extends LitElement {
     this.message = 'Hello world! From my-element';
     this.name = "unknown"
     this.source = "unknown"
-
+    this.username = "unknown"
+    this.friends = 0
+    this.names = []
+    this.store  = $rdf.graph();
+    this.fetcher = new $rdf.Fetcher(this.store, {});
+    console.log("RDFLIB STORE",this.store)
   }
 
   firstUpdated(changedProperties) {
@@ -30,10 +44,68 @@ class MyRdflib extends LitElement {
       if (message.hasOwnProperty("webId")){
         app.webId = message.webId
         console.log(this.id+"receive webId "+app.webId)
+        if (app.webId != null){
+          app.testlib(app.webId)
+
+
+        }
+
       }
     };
 
   }
+
+  testWithRuben(){
+    this.webId = "https://ruben.verborgh.org/profile/#me"
+    this.testlib(this.webId)
+  }
+  async testlib(webId){
+    const person = this.store.sym(webId);
+    console.log("RDFLIB person",person)
+    const profile = person.doc();       //i.e. store.sym(''https://example.com/alice/card#me')
+    console.log("RDFLIB Profile",profile)
+    const VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
+    const FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
+    //
+    await this.fetcher.load(webId);
+    this.friends = this.store.each(person, FOAF('knows'), null, person.doc())
+    console.log(this.friends)
+
+
+    await Promise.all(this.friends.map(((friendWebId) => this.fetcher.load(friendWebId.value))));
+    this.names = this.friends.map((friend) => this.store.any(friend, FOAF('name'), null, friend.doc()));
+    console.log("RDFLIB names",this.names)
+
+
+    let name = this.store.any(person, VCARD('fn'));
+    console.log(name)
+
+
+
+
+    if (name) {
+      this.username =  name.value; // name is a Literal object
+    }
+
+    let pic = this.store.any(person, VCARD('hasPhoto'));
+    console.log(pic)
+    if (pic) {
+      this.shadowRoot.getElementById('picture').setAttribute('src', pic.uri); // pic is a NamedNode
+      this.shadowRoot.getElementById('picture').setAttribute('alt', pic.uri);
+      console.log(pic)
+    }
+
+
+
+    /*const friendWebIds = this.store.each(person, new $rdf.NamedNode(FOAF.knows), null, person.doc());
+    console.log("RDFLIB friends webids",friendWebIds)*/
+    /*await Promise.all(friendWebIds.map(((friendWebId) => this.fetcher.load(friendWebId.value))));
+    const names = friendWebIds.map((friend) => this.store.any(friend, new NamedNode(FOAF.name), null, (friend as NamedNode).doc()));
+    console.log("RDFLIB names",names)*/
+
+  }
+
+
 
   render() {
     return html`
@@ -66,8 +138,24 @@ class MyRdflib extends LitElement {
     <!-- Card Body -->
     <div class="card-body">
     <p>Name : ${this.name}</p>
-    <p>WebId : ${this.webId}</p>
+    <p>WebId : <a href="${this.webId}" target="_blank">${this.webId}</a></p>
+    <p> Username : ${this.username}</p>
+
+    <p>
+    <img id="picture" style = 'max-width: 3em; min-width: 3em; border-radius: 0.6em;'
+    src = '@@default person image from github.io'>
+    </p>
+    <p> Friends : ${this.friends.length}</p>
+  
+    <pre class="pre-scrollable">
+      <ul id="messageslist">
+    ${this.names.map((item) => html`<li>${item}</li>`)}
+      </ul>
+    </pre>
+
     <p>${this.message} à ${this.source}</p>
+
+    <button @click=${this.testWithRuben}>Test with Ruben</button>
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
     </div>
     </div>

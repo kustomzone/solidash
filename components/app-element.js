@@ -15,9 +15,10 @@ class AppElement extends LitElement{
 
 
 
-    <my-ldflex message="parcours d'un POD public" name="Public with LDFLEX" source = "https://smag0.solid.community/public/"></my-ldflex>
+
     <my-rdflib message="parcours d'un POD public" name="Public with RDFLIB" source = "https://smag0.solid.community/public/"></my-rdflib>
     <my-tripledoc message="parcours d'un POD public" name="Public with TRIPLEDOC" source = "https://smag0.solid.community/public/"></my-tripledoc>
+  <my-ldflex message="parcours d'un POD public" name="Public with LDFLEX" source = "https://smag0.solid.community/public/"></my-ldflex>
 
       <my-geolocation message="activate your geolocation or not" name="Geolocation" ></my-geolocation>
 
