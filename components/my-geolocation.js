@@ -2,6 +2,7 @@
 //https://www.alsacreations.com/tuto/lire/926-geolocalisation-geolocation-html5.html
 //https://nouvelle-techno.fr/actualites/2018/05/11/pas-a-pas-inserer-une-carte-openstreetmap-sur-votre-site
 //https://openlayers.org/en/latest/apidoc/module-ol_Map-Map.html#setTarget
+//https://openstreetmap.be/en/projects/howto/openlayers.html --> markers
 import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../js/agents/HelloAgent.js';
 
@@ -21,6 +22,9 @@ class MyGeolocation extends LitElement {
   }
 
   script() {
+
+
+
     let script = document.createElement('script');
     // console.log(this)
     script.onload = this.onLoad.bind(this);
@@ -30,27 +34,29 @@ class MyGeolocation extends LitElement {
     //   script.crossorigin = '';
 
     return script;
+
   }
 
   onLoad() {
   //  alert('loaded');
+  if(this.map === undefined){
     this.map = new ol.Map({
-      //target: 'map',
+      target: this.shadowRoot.getElementById('map'),
       layers: [
         new ol.layer.Tile({
           source: new ol.source.OSM()
         })
       ],
       view: new ol.View({
-        center: ol.proj.fromLonLat([37.41, 8.82]),
-        zoom: 4
+        center: ol.proj.fromLonLat([4.85, 45.75]),
+        zoom: 15
       })
     });
     //console.log(this.map)
-this.map.setTarget(this.shadowRoot.getElementById('map'))
+//this.map.setTarget(this.shadowRoot.getElementById('map'))
 //console.log(map)
-
-
+this.startWatch()
+}
 
   }
 
@@ -69,9 +75,9 @@ this.map.setTarget(this.shadowRoot.getElementById('map'))
 
   firstUpdated(changedProperties) {
     this.agent = new HelloAgent(this.name);
-  //  this.startWatch()
+  //
 
-
+this.script();
 
 
   }
@@ -120,37 +126,27 @@ this.map.setTarget(this.shadowRoot.getElementById('map'))
     infopos += "Vitesse  : "+position.coords.speed +"\n";
     this.infopos = infopos;
 
-/*
-  var updatedView =   new ol.View({
-      center: ol.proj.fromLonLat([position.coords.latitude, position.coords.longitude]),
-      zoom: 4
-    })*/
-//this.map.setCenter([position.coords.latitude, position.coords.longitude])
-    //this.map.setView(updatedView)
-  //  this.map.render()
+
   var view = this.map.getView()
-    console.log(view)
-    view.setCenter([position.coords.latitude, position.coords.longitude])
-  //  view.setResolution(5)
-  //  view.centerOn([position.coords.latitude, position.coords.longitude], 10, [position.coords.latitude, position.coords.longitude])
+  //  console.log(view)
+    var lat = position.coords.latitude
+    var lon = position.coords.longitude
+    view.setCenter(ol.proj.fromLonLat([lon, lat]));
+  //  view.setZoom(10);
 
-    //  document.getElementById("infoposition").innerHTML = infopos;
+
+    var layer = new ol.layer.Vector({
+        source: new ol.source.Vector({
+            features: [
+                new ol.Feature({
+                    geometry: new ol.geom.Point(ol.proj.fromLonLat([lon, lat]))
+                })
+            ]
+        })
+    });
+    this.map.addLayer(layer);
+
   }
-
-
-  // Fonction d'initialisation de la carte
-  /*initMap() {
-    // Créer l'objet "macarte" et l'insèrer dans l'élément HTML qui a l'ID "map"
-    this.macarte = L.map('map').setView([this.lat, this.lon], 11);
-    // Leaflet ne récupère pas les cartes (tiles) sur un serveur par défaut. Nous devons lui préciser où nous souhaitons les récupérer. Ici, openstreetmap.fr
-    L.tileLayer('https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png', {
-      // Il est toujours bien de laisser le lien vers la source des données
-      attribution: 'données © <a href="//osm.org/copyright">OpenStreetMap</a>/ODbL - rendu <a href="//openstreetmap.fr">OSM France</a>',
-      minZoom: 1,
-      maxZoom: 20
-    }).addTo(this.macarte);
-  }*/
-
 
 
   render() {
@@ -166,25 +162,13 @@ this.map.setTarget(this.shadowRoot.getElementById('map'))
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/css/ol.css" type="text/css">
       <style>
         .map {
-          height: 300px;
+          height: 400px;
           width: 100%;
         }
       </style>
 
-    <!--  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css"
-    integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-    crossorigin=""/>
 
-
-
-    <style type="text/css">
-    #map{ /* la carte DOIT avoir une hauteur sinon elle n'apparaît pas */
-    height:400px;
-  }
-  </style>
-  -->
-  ${this.script()}
-  <!--<div class="col-xl-4 col-lg-5">-->
+  <div class="col-xl-4 col-lg-5">
   <div class="card shadow mb-4">
   <!-- Card Header - Dropdown -->
   <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -207,17 +191,18 @@ this.map.setTarget(this.shadowRoot.getElementById('map'))
   <!-- Card Body -->
   <div class="card-body">
   <div id="infoposition">${this.infopos}</div>
-  <p>${this.message}</p>
-<div class="row">
-  <div id="map" class="map"></div>
+  <!--<p>${this.message}</p>-->
+<div class="col">
+<div id="map" class="map"></div>
 </div>
   <!--  <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>-->
   </div>
   </div>
-  <!--  </div>-->
+    </div>
 
 
 
+ ${this.script()}
 
   `;
 }
