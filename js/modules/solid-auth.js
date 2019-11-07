@@ -76,7 +76,7 @@ function   informAllAgents(session){
   var allAgents = Object.keys(agentSolidAuth.connections[0].transport.agents);
   console.log(allAgents)
   allAgents.forEach(function (agent){
-    agentSolidAuth.send(agent, 'session changed '+webId);
+    agentSolidAuth.send(agent, {webId: webId});
   })
 
 

@@ -9,7 +9,8 @@ class MyCard extends LitElement {
     return {
       message: { type: String },
       name: {type: String},
-      source: {type: String}
+      source: {type: String},
+      webId: {type: String}
     };
   }
 
@@ -22,7 +23,14 @@ class MyCard extends LitElement {
   }
 
   firstUpdated(changedProperties) {
+    var app = this;
     this.agent = new HelloAgent(this.name);
+    this.agent.receive = function(from, message) {
+      if (message.hasOwnProperty("webId")){
+        app.webId = message.webId
+        console.log(this.id+"receive webId "+app.webId)
+      }
+    };
 
   }
 
@@ -57,6 +65,7 @@ class MyCard extends LitElement {
     <!-- Card Body -->
     <div class="card-body">
     <p>Name : ${this.name}</p>
+    <p>WebId : ${this.webId}</p>
     <p>${this.message} à ${this.source}</p>
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
     </div>

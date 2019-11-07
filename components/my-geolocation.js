@@ -22,19 +22,10 @@ class MyGeolocation extends LitElement {
   }
 
   script() {
-
-
-
     let script = document.createElement('script');
-    // console.log(this)
     script.onload = this.onLoad.bind(this);
-
     script.src = 'https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.1.1/build/ol.js';
-    //   script.integrity = 'sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==';
-    //   script.crossorigin = '';
-
     return script;
-
   }
 
   onLoad() {
@@ -52,53 +43,27 @@ class MyGeolocation extends LitElement {
           zoom: 15
         })
       });
-      //console.log(this.map)
-      //this.map.setTarget(this.shadowRoot.getElementById('map'))
-      //console.log(map)
       this.startWatch()
     }
-
   }
-
-
 
   constructor() {
     super();
     this.message = 'Hello world! From my-element';
     this.name = "unknown";
     this.infopos = "You must accept Geolocation to use this widget";
-    /*
-    this.lat = 48.852969;
-    this.lon = 2.349903;
-    this.macarte = null;*/
   }
 
   firstUpdated(changedProperties) {
     this.agent = new HelloAgent(this.name);
-    //
-
     this.script();
-
-
   }
 
   startWatch(){
     var app = this
-    //   this.initMap();
     if(navigator.geolocation){
       this.shadowRoot.getElementById('startWatchBtn').classList.add('d-none')
       this.shadowRoot.getElementById('stopWatchBtn').classList.remove('d-none')
-      //  console.log()
-      //  $('#stopWatchBtn').removeClass('d-none')
-      //  $('#startWatchBtn').addClass('d-none')
-
-
-
-
-
-
-
-
       app.survId =  navigator.geolocation.watchPosition(function(pos){
         app.maPosition(pos,app)
       })
@@ -115,10 +80,7 @@ class MyGeolocation extends LitElement {
     this.infopos = "Gelolocation disabled"
   }
 
-
   maPosition(position, app) {
-    //  console.log(position)
-    //var app = this
     var infopos = "Position déterminée :\n";
     infopos += "Latitude : "+position.coords.latitude +"\n";
     infopos += "Longitude: "+position.coords.longitude+"\n";
@@ -126,14 +88,10 @@ class MyGeolocation extends LitElement {
     infopos += "Vitesse  : "+position.coords.speed +"\n";
     this.infopos = infopos;
 
-
     var view = this.map.getView()
-    //  console.log(view)
     var lat = position.coords.latitude
     var lon = position.coords.longitude
     view.setCenter(ol.proj.fromLonLat([lon, lat]));
-    //  view.setZoom(10);
-
 
     var layer = new ol.layer.Vector({
       source: new ol.source.Vector({
@@ -145,7 +103,6 @@ class MyGeolocation extends LitElement {
       })
     });
     this.map.addLayer(layer);
-
   }
 
 
@@ -169,7 +126,7 @@ class MyGeolocation extends LitElement {
 
 
     <!--<div class="col-xl-4 col-lg-5">-->
-    <div class="card shadow mb-4">
+    <div class="col-xl-4 col-lg-5 card shadow mb-4">
     <!-- Card Header - Dropdown -->
     <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
     <h6 class="m-0 font-weight-bold text-primary">Name : ${this.name}</h6>

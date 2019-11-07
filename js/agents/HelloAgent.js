@@ -20,7 +20,7 @@ HelloAgent.prototype.sayHello = function(to) {
 HelloAgent.prototype.receive = function(from, message) {
   slog(this.id+" received from :"+from + ' this message: ' + JSON.stringify(message));
 
-  if (message.indexOf('Hello') === 0) {
+  if (JSON.stringify(message).indexOf('Hello') === 0) {
     // reply to the greeting
     this.send(from, 'Hi ' + from + ', nice to meet you!');
   }
