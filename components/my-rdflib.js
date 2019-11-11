@@ -142,11 +142,12 @@ class MyRdflib extends LitElement {
     <p> Username : ${this.username}</p>
 
     <p>
+    <!--
     <img id="picture" style = 'max-width: 3em; min-width: 3em; border-radius: 0.6em;'
-    src = '@@default person image from github.io'>
+    src = '@@default person image from github.io'>-->
     </p>
     <p> Friends : ${this.friends.length}</p>
-  
+
     <pre class="pre-scrollable">
       <ul id="messageslist">
     ${this.names.map((item) => html`<li>${item}</li>`)}

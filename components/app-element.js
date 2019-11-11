@@ -6,6 +6,7 @@ import './my-element.js';
 import './my-card.js';
 import './my-ldflex.js';
 import './my-rdflib.js';
+import './my-fileclient.js';
 import './my-tripledoc.js';
 import './my-geolocation.js';
 
@@ -13,18 +14,38 @@ class AppElement extends LitElement{
   render(){
     return html`
 
+    <my-rdflib
+    message="parcours d'un POD public"
+    name="Public with RDFLIB"
+    source = "https://smag0.solid.community/public/">
+    </my-rdflib>
 
+    <my-fileclient
+    message="parcours d'un POD public avec https://github.com/jeff-zucker/solid-file-client"
+    name="Public with Solid File Client"
+    source = "https://smag0.solid.community/public/">
+    </my-fileclient>
 
+    <my-tripledoc
+    message="parcours d'un POD public"
+    name="Public with TRIPLEDOC"
+    source = "https://smag0.solid.community/public/">
+    </my-tripledoc>
 
-    <my-rdflib message="parcours d'un POD public" name="Public with RDFLIB" source = "https://smag0.solid.community/public/"></my-rdflib>
-    <my-tripledoc message="parcours d'un POD public" name="Public with TRIPLEDOC" source = "https://smag0.solid.community/public/"></my-tripledoc>
-  <my-ldflex message="parcours d'un POD public" name="Public with LDFLEX" source = "https://smag0.solid.community/public/"></my-ldflex>
+    <my-ldflex
+    message="parcours d'un POD public"
+    name="Public with LDFLEX"
+    source = "https://smag0.solid.community/public/">
+    </my-ldflex>
 
-      <my-geolocation message="activate your geolocation or not" name="Geolocation" ></my-geolocation>
+    <my-geolocation
+    message="activate your geolocation or not"
+    name="Geolocation">
+    </my-geolocation>
 
-      <my-card message="parcours d'un POD public" name="Public" source = "https://smag0.solid.community/public/"></my-card>
+    <my-card message="parcours d'un POD public" name="Public" source = "https://smag0.solid.community/public/"></my-card>
 
-      <my-card message="parsing d'un fichier ttl" name="role" source = "https://smag0.solid.community/public/holacratie/Schema/role.ttl"></my-card>
+    <my-card message="parsing d'un fichier ttl" name="role" source = "https://smag0.solid.community/public/holacratie/Schema/role.ttl"></my-card>
 
     `;
   }

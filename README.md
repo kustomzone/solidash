@@ -2,16 +2,24 @@
 https://forum.solidproject.org/t/conceptual-design-solid-better-user-experience/422
 
 
+# install
+prerequis : git, nodejs >= 10.15.3
+
+```
+git clone https://github.com/scenaristeur/solidash.git
+cd solidash
+npm install --save express
+node .
+```
+--> solidash accessible at http://127.0.0.1:3000
+
+
+
 # libs
-//https://solid.github.io/solid-auth-client/
-//https://github.com/inrupt/solid-lib-comparison
+https://solid.github.io/solid-auth-client/
+https://github.com/inrupt/solid-lib-comparison
 tripledoc : https://vincenttunru.gitlab.io/tripledoc/docs/getting-started.html
 https://gitlab.com/vincenttunru/tripledoc/blob/master/src/index.ts
-
-
-
-
-
 
 
 
