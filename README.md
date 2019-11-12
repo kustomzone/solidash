@@ -5,6 +5,7 @@ https://forum.solidproject.org/t/conceptual-design-solid-better-user-experience/
 # install
 prerequis : git, nodejs >= 10.15.3
 
+Use your favorite Webserver or nodejs/express
 ```
 git clone https://github.com/scenaristeur/solidash.git
 cd solidash
