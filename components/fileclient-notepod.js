@@ -4,6 +4,7 @@ import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1'
 import { HelloAgent } from '../js/agents/HelloAgent.js';
 //import  '../libs/rdflib.min.js';
 import  '../libs/solid-file-client.bundle.js';
+import { slog } from '../js/helpers/system-messages.js';
 
 
 // Extend the LitElement base class
@@ -57,6 +58,7 @@ class FileclientNotepod extends LitElement {
             },
             err => {
               console.log(err)
+              slog(err, "FileclientNotepod")
             });
 
 
@@ -83,6 +85,7 @@ class FileclientNotepod extends LitElement {
               },
               err =>{
                 console.log(err)
+                slog(err, "FileclientNotepod")
               });
 
 
@@ -118,19 +121,26 @@ class FileclientNotepod extends LitElement {
         The Public Type Index is itself a publicly accessible Document stored in the user’s Pod. This Document contains a list of links to other Documents, along with the type of data that is to be included in those Documents.
         */
         let publicTypeIndexUrl = app.graph.any(app.person, app.SOLID('publicTypeIndex'));
-        console.log("publicTypeIndexUrl",publicTypeIndexUrl)
+        slog("OK","publicTypeIndexUrl")
 
         app.debug += "publicTypeIndexUrl  " + publicTypeIndexUrl+ "  "
-
+        console.log(app)
         app.fileClient.fetchAndParse(publicTypeIndexUrl.value, 'text/turtle')
         .then(
           publicTypeIndex => {
-            console.log("publicTypeIndex",publicTypeIndex)
+            //console.log("publicTypeIndex",publicTypeIndex)
             app.debug += "    publicTypeIndex  OK "
+            slog( "OK", "publicTypeIndex in "+this.localName)
           },
           err =>{
-            console.log(err)
-            app.debug += "    publicTypeIndex  ERREUR " 
+            //console.log(err)
+            // test erreur 403 Origin Unauthorized  --> add origin on
+            app.debug += " \n   publicTypeIndex  ERREUR " +err
+            slog(err, this.localName)
+            if (err.indexOf('Origin Unauthorized') > -1){
+              slog("You must add Origin to the POD's Trusted App", app.localName)
+            }
+
           });
 
 

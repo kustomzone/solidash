@@ -12,7 +12,7 @@ cd solidash
 npm install --save express
 node .
 ```
---> solidash accessible at http://127.0.0.1:3000
+--> solidash accessible at http://localhost:3000 (don't forget to authorize http://localhost:3000 in the Trusted Apps of your POD)
 
 
 
