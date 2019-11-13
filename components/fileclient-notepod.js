@@ -145,7 +145,7 @@ class FileclientNotepod extends LitElement {
             console.log(notesListEntry)
             const notesListUrl = publicTypeIndex.each($rdf.sym(notesListEntry[0].value), app.SOLID('instance'), null);
             console.log("notesListUrl", notesListUrl)
-
+            app.notesListUrl = notesListUrl;
             app.showFileInConsole(notesListUrl[0].value)
             app.fileClient.fetchAndParse(notesListUrl[0].value, 'text/turtle')
             .then(
@@ -182,7 +182,7 @@ class FileclientNotepod extends LitElement {
           console.log("storage",storage)
           // Determine at what URL the new Document should be stored:
           const notesListUrl = storage[0].value + 'public/notes.ttl';
-          console.log(typeof notesListUrl)
+          //console.log(typeof notesListUrl)
           //  app.createEmptyDocument(location)
           app.fileClient.deleteFile(notesListUrl).then(
             success => {
@@ -203,8 +203,22 @@ class FileclientNotepod extends LitElement {
             // Determine at what URL the new Document should be stored:
             const notesListUrl = storage[0].value + 'public/notes.ttl';
             console.log(typeof notesListUrl)
+
+            var content = `
+            @prefix : <#>.
+            @prefix schem: <http://schema.org/>.
+            @prefix XML: <http://www.w3.org/2001/XMLSchema#>.
+
+            :157315672228346294578095965644
+            a schem:TextDigitalDocument;
+            schem:dateCreated "2019-11-07T19:58:42Z"^^XML:dateTime;
+            schem:text "Second note".
+            :1573156739481420194364517402
+            a schem:TextDigitalDocument;
+            schem:dateCreated "2019-11-07T19:58:59Z"^^XML:dateTime;
+            schem:text "TROIS note".`
             //  app.createEmptyDocument(location)
-            app.fileClient.createFile(notesListUrl).then(
+            app.fileClient.createFile(notesListUrl, content).then(
               fileCreated => {
                 console.log(`Created file ${fileCreated}.`);
                 // Update PublicTypeIndex https://vincenttunru.gitlab.io/tripledoc/docs/cheatsheet.html#rdflib-3
@@ -234,12 +248,12 @@ class FileclientNotepod extends LitElement {
                 ter:forClass schem:TextDigitalDocument;
                 ter:instance </public/notes.ttl>.
                 */
-              //  var id = app.publicTypeIndexUrl.value+":test";
-              //  console.log("ID",id)
-              console.log("RDF",$rdf)
-              var local = new $rdf.Namespace(app.publicTypeIndexUrl.value+"#")
+                //  var id = app.publicTypeIndexUrl.value+":test";
+                //  console.log("ID",id)
+                console.log("RDF",$rdf)
+                var local = new $rdf.Namespace(app.publicTypeIndexUrl.value+"#")
                 var subj = 'notepodapp'
-              //  console.log("SUBJ",subj)
+                //  console.log("SUBJ",subj)
                 //  const updatePromise = new Promise((resolve) => {
                 let additions = [
                   $rdf.st(local(subj), app.RDF('type'), app.SOLID('TypeRegistration'), app.publicTypeIndexUrl),
@@ -276,13 +290,56 @@ class FileclientNotepod extends LitElement {
 
 
 
-
-
           }, err => {
             console.log(err); alert(err);
           } );
           // --> app.noteList = noteList
         }
+
+        addNote(){
+          var app = this
+          var note = this.shadowRoot.getElementById('notearea').value
+          console.log(note)
+          console.log(app.notesListUrl[0].value)
+          var timestamp = Math.round(new Date().getTime());
+
+          const store = $rdf.graph();
+          const fetcher = new $rdf.Fetcher(store, {});
+          fetcher.load(app.notesListUrl[0].value);
+          //  const me = sym(currentSession.webId);
+          const updater = new $rdf.UpdateManager(store);
+
+          //const updater = new $rdf.UpdateManager(app.notesListUrl[0].value);
+          console.log("updater",updater)
+          //var local = new $rdf.Namespace(app.notesListUrl.value+"#")
+          //console.log(local)
+          //var note_id = local(timestamp)
+          var date = new Date(timestamp)
+          var subj = app.notesListUrl[0].value+"#test"
+          console.log("SUBJ",subj)
+          //  const updatePromise = new Promise((resolve) => {
+          let additions = [
+            $rdf.st($rdf.sym(subj), $rdf.sym(subj), $rdf.sym(subj),app.notesListUrl[0].value),
+            //  $rdf.st($rdf.sym(subj), app.RDF('type'), app.SCHEMA('TextDigitalDocument'),app.notesListUrl[0].value),
+            //  $rdf.st($rdf.Literal(timestamp), app.SCHEMA('text'), $rdf.Literal(note), app.notesListUrl[0]),
+            //  $rdf.st($rdf.Literal(timestamp), app.SCHEMA('dateCreated'), $rdf.Literal(date), app.notesListUrl[0]),
+          ]
+          let deletions = []
+          //  const deletions = store.statementsMatching(me, sym('http://xmlns.com/foaf/0.1/nick'), null, me.doc());
+          //  const additions = nicknames.map(nickname => st(me, sym('http://xmlns.com/foaf/0.1/nick'), new Literal(nickname), me.doc()));
+          updater.update(deletions, additions).then(
+            updated => {
+              console.log("UPDATED",updated)
+              //  app.getNotesList()
+            } ,
+            err => {
+              console.log("ERREUR",err)
+            }
+          );
+
+        }
+
+
 
 
         async createEmptyDocument(location) {
@@ -368,6 +425,15 @@ class FileclientNotepod extends LitElement {
             <p>${this.message} à ${this.source}</p>
             <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
             <br>
+
+            <textarea id ="notearea">
+
+            </textarea>
+            <br>
+            <button @click=${this.addNote}>Add note</button>
+            <br>
+
+
             !! FOR TEST !!!
             <button @click=${this.createNote}>Create notes.ttl</button>
             <br>
