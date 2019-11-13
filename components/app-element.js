@@ -20,7 +20,7 @@ class AppElement extends LitElement{
     name="NOTEPOD with Solid File Client"
     source = "unknown">
     </fileclient-notepod>
-<!--
+
     <my-rdflib
     message="parcours d'un POD public"
     name="Public with RDFLIB"
@@ -53,7 +53,7 @@ class AppElement extends LitElement{
     <my-card message="parcours d'un POD public" name="Public" source = "https://smag0.solid.community/public/"></my-card>
 
     <my-card message="parsing d'un fichier ttl" name="role" source = "https://smag0.solid.community/public/holacratie/Schema/role.ttl"></my-card>
-    -->
+   
 
     `;
   }
