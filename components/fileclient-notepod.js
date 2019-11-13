@@ -38,28 +38,21 @@ class FileclientNotepod extends LitElement {
     this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
-  }
+    this.SCHEMA = new $rdf.Namespace('http://schema.org/');   }
 
-  firstUpdated(changedProperties) {
-    var app = this;
+    firstUpdated(changedProperties) {
+      var app = this;
 
-    this.agent = new HelloAgent(this.name);
+      this.agent = new HelloAgent(this.name);
 
 
-    this.agent.receive = function(from, message) {
-      if (message.hasOwnProperty("webId")){
-        app.webId = message.webId
-        console.log(this.id+"receive webId "+app.webId)
+      this.agent.receive = function(from, message) {
+        if (message.hasOwnProperty("webId")){
+          app.webId = message.webId
+          console.log(this.id+"receive webId "+app.webId)
 
-        if (app.webId != null){
-          app.fileClient.readFile(app.webId).then(
-            body => {
-              console.log(`File content is : ${body}.`);
-            },
-            err => {
-              console.log(err)
-              slog(err, "FileclientNotepod")
-            });
+          if (app.webId != null){
+            app.showFileInConsole(app.webId)
 
 
             app.fileClient.fetchAndParse(app.webId, 'text/turtle')
@@ -124,13 +117,24 @@ class FileclientNotepod extends LitElement {
         slog("OK","publicTypeIndexUrl")
 
         app.debug += "publicTypeIndexUrl  " + publicTypeIndexUrl+ "  "
-        console.log(app)
+        //  console.log(app)
+        app.showFileInConsole(publicTypeIndexUrl.value)
         app.fileClient.fetchAndParse(publicTypeIndexUrl.value, 'text/turtle')
         .then(
           publicTypeIndex => {
-            //console.log("publicTypeIndex",publicTypeIndex)
+            console.log("publicTypeIndex",publicTypeIndex)
             app.debug += "    publicTypeIndex  OK "
             slog( "OK", "publicTypeIndex in "+this.localName)
+
+            //const notesListEntry = publicTypeIndex.findSubject(solid.forClass, schema.TextDigitalDocument);
+            //const notesListEntry = app.graph.any(null, app.SOLID('forClass'), app.SCHEMA('TextDigitalDocument'));
+            const notesListEntry = publicTypeIndex.each(null, app.SOLID('forClass'), app.SCHEMA('TextDigitalDocument'));
+            console.log("notesListEntry",notesListEntry)
+            if (notesListEntry === null) {
+              // We will define this function later:
+              return initialiseNotesList(app.profile, publicTypeIndex);
+            }
+
           },
           err =>{
             //console.log(err)
@@ -147,76 +151,94 @@ class FileclientNotepod extends LitElement {
         }
 
 
-        render() {
-          return html`
-          <!-- Custom fonts for this template-->
-          <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-          <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
 
-          <!-- Custom styles for this template-->
-          <link href="css/sb-admin-2.min.css" rel="stylesheet">
-          <link href="css/main.css" rel="stylesheet">
-
-          <!--<div class="col-xl-4 col-lg-5">-->
-          <div class="card shadow mb-4">
-          <!-- Card Header - Dropdown -->
-          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-          <h6 class="m-0 font-weight-bold text-primary">Name : ${this.name}</h6>
-          <div class="dropdown no-arrow">
-          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-          </a>
-          <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-          <div class="dropdown-header">Dropdown Header:</div>
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-          </div>
-          </div>
-          <!-- Card Body -->
-          <div class="card-body">
-          <p>Name : ${this.name}</p>
-          <p>WebId : ${this.webId}</p>
-          <small>Don't forget to add your server to trusted apps in your preference's POD</small>
-          <p> Username : ${this.username}</p>
-
-          <p> Friends : ${this.friends.length}</p>
-
-          <p>debug : </p>
-          ${this.debug}
-
-
-          <pre class="pre-scrollable">
-          <ul id="messageslist">
-          ${this.friends.map((f) => html`<li>${f.value}</li>`)}
-          </ul>
-          </pre>
-
-          <p>${this.message} à ${this.source}</p>
-          <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
-          <br>
-
-          <small>https://forum.solidproject.org/t/notepod-a-note-taking-app-for-solid/2371</small><br>
-          <small>https://github.com/jeff-zucker/solid-file-client</small><br>
-          <small>https://solidproject.org/for-developers/apps/first-app/2-understanding-solid</small>
-          </div>
-          </div>
-          <!--  </div>-->
-
-
-
-
-          `;
+        initialiseNotesList(profile,publicTypeIndex){
+          console.log("CREATION de "+publicTypeIndex + " pour "+ profile )
         }
 
-        clickHandler(event) {
-          //console.log(event.target);
-          console.log(this.agent)
-          this.agent.send('agent1', 'Hello agent1!');
-        }
 
-      }
-      // Register the new element with the browser.
-      customElements.define('fileclient-notepod', FileclientNotepod);
+        showFileInConsole(file){
+          var app = this;
+          app.fileClient.readFile(file).then(
+            body => {
+              console.log(file +" content is : \n\n", body);
+            },
+            err => {
+              console.log(err)
+              slog(err, app.localName)
+            });
+          }
+
+          render() {
+            return html`
+            <!-- Custom fonts for this template-->
+            <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+            <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+            <!-- Custom styles for this template-->
+            <link href="css/sb-admin-2.min.css" rel="stylesheet">
+            <link href="css/main.css" rel="stylesheet">
+
+            <!--<div class="col-xl-4 col-lg-5">-->
+            <div class="card shadow mb-4">
+            <!-- Card Header - Dropdown -->
+            <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Name : ${this.name}</h6>
+            <div class="dropdown no-arrow">
+            <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+            </a>
+            <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+            <div class="dropdown-header">Dropdown Header:</div>
+            <a class="dropdown-item" href="#">Action</a>
+            <a class="dropdown-item" href="#">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Something else here</a>
+            </div>
+            </div>
+            </div>
+            <!-- Card Body -->
+            <div class="card-body">
+            <p>Name : ${this.name}</p>
+            <p>WebId : ${this.webId}</p>
+            <small>Don't forget to add your server to trusted apps in your preference's POD</small>
+            <p> Username : ${this.username}</p>
+
+            <p> Friends : ${this.friends.length}</p>
+
+            <p>debug : </p>
+            ${this.debug}
+
+
+            <pre class="pre-scrollable">
+            <ul id="messageslist">
+            ${this.friends.map((f) => html`<li>${f.value}</li>`)}
+            </ul>
+            </pre>
+
+            <p>${this.message} à ${this.source}</p>
+            <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
+            <br>
+
+            <small>https://forum.solidproject.org/t/notepod-a-note-taking-app-for-solid/2371</small><br>
+            <small>https://github.com/jeff-zucker/solid-file-client</small><br>
+            <small>https://solidproject.org/for-developers/apps/first-app/2-understanding-solid</small>
+            </div>
+            </div>
+            <!--  </div>-->
+
+
+
+
+            `;
+          }
+
+          clickHandler(event) {
+            //console.log(event.target);
+            console.log(this.agent)
+            this.agent.send('agent1', 'Hello agent1!');
+          }
+
+        }
+        // Register the new element with the browser.
+        customElements.define('fileclient-notepod', FileclientNotepod);
