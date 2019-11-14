@@ -21,7 +21,7 @@ class AppElement extends LitElement{
     name="Public with TRIPLEDOC"
     source = "https://smag0.solid.community/public/">
     </my-tripledoc>
-<!--
+
     <fileclient-notepod
     message="Notepod avec https://github.com/jeff-zucker/solid-file-client"
     name="NOTEPOD with Solid File Client"
@@ -56,7 +56,7 @@ class AppElement extends LitElement{
     <my-card message="parcours d'un POD public" name="Public" source = "https://smag0.solid.community/public/"></my-card>
 
     <my-card message="parsing d'un fichier ttl" name="role" source = "https://smag0.solid.community/public/holacratie/Schema/role.ttl"></my-card>
--->
+
 
     `;
   }

@@ -31,6 +31,10 @@ class MyTripledoc extends LitElement {
     this.friends = []
     this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
+    this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
+    this.SCHEMA = new $rdf.Namespace('http://schema.org/');
+    this.SPACE = new $rdf.Namespace('http://www.w3.org/ns/pim/space#');
+    this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
   }
 
   firstUpdated(changedProperties) {
@@ -42,6 +46,7 @@ class MyTripledoc extends LitElement {
         console.log(this.id+"receive webId "+app.webId)
         if (app.webId != null){
           app.getUserData()
+          app.initNotePod()
         }
       }
     };
@@ -62,10 +67,12 @@ class MyTripledoc extends LitElement {
         app.friends = person.getAllRefs(app.FOAF('knows'))
         console.log("Friends",app.friends)
 
-
-
       }
     );
+  }
+
+  initNotePod(){
+
   }
 
 
@@ -115,6 +122,9 @@ class MyTripledoc extends LitElement {
     <p>${this.message} à ${this.source}</p>
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
     </div>
+    <small>https://forum.solidproject.org/t/notepod-a-note-taking-app-for-solid/2371</small><br>
+    <small>https://github.com/jeff-zucker/solid-file-client</small><br>
+    <small>https://solidproject.org/for-developers/apps/first-app/2-understanding-solid</small>
     </div>
     <!--  </div>-->
 
