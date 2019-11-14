@@ -19,6 +19,12 @@
   <link href="css/sb-admin-2.min.css" rel="stylesheet">
   <link href="css/main.css" rel="stylesheet">
 
+  <!-- tripledoc import https://forum.solidproject.org/t/help-using-different-libs-rdflibjs-tripledoc-ldflex-solid-file-client/2388/3?u=smag0 -->
+  <script src="https://unpkg.com/rdflib/dist/rdflib.min.js"></script>
+  <script>
+  window.rdflib = window.$rdf;
+  </script>
+  <script src="https://unpkg.com/tripledoc@2.4/umd/index.js"></script>
 
   <script type="module" src="./components/main-element.js"></script>
   <script type="module" src="./components/app-element.js"></script>
@@ -475,10 +481,10 @@
                       </div>
                     </div>
                   </div>
-</div>
+                </div>
 
-<app-element class="row-12"></app-element>
-<div class="row">
+                <app-element class="row-12"></app-element>
+                <div class="row">
 
                   <!-- TODO -->
                   <div class="col-xl-4 col-lg-5">
@@ -503,10 +509,13 @@
                       <div class="card-body">
                         <pre class="pre-scrollable">
                           <ul class="todolist">
+                            <li><i class="far fa-square"></i> build widget with SmartDown https://smartdown.solid.community/public/smartdown/#/public/SolidLDFlexMutation.md </li>
+                            <li><i class="far fa-square"></i> build widget with React / Angular </li>
+                            <li><i class="far fa-square"></i> build widget with vue  https://github.com/JordanShurmer/vue-solid-plugin </li>
                             <li><i class="far fa-square"></i>  show user profile   </li>
                             <li><i class="far fa-square"></i>  show spoggy graph of user POD   </li>
                             <li><i class="far fa-square"></i>  show browser for user POD  </li>
-                              <li><i class="far fa-check-square"></i> test lit-element webcomponent with agents</li>
+                            <li><i class="far fa-check-square"></i> test lit-element webcomponent with agents</li>
                             <li><i class="far fa-check-square"></i> add evejs agents</li>
                             <li><i class="far fa-check-square"></i> add solid-auth login </li>
                             <li><i class="far fa-check-square"></i> Use bootstrap4 dashboard template</li>

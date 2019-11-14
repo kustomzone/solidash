@@ -22,7 +22,16 @@ https://github.com/inrupt/solid-lib-comparison
 tripledoc : https://vincenttunru.gitlab.io/tripledoc/docs/getting-started.html
 https://gitlab.com/vincenttunru/tripledoc/blob/master/src/index.ts
 
+links from the Zoom chat of the community call:
+Data browsers:
+https://datasister.5apps.com/ 
+https://otto-aa.github.io/solid-filemanager/ https://github.com/solid/solid-apps 
 
+Libraries for building Solid apps:
+https://solidproject.org/for-developers/apps/tools
+ https://forum.solidproject.org/t/soukai-a-different-way-to-query-pods/2105 
+ https://reactjs.org/docs/hooks-intro.html https://github.com/inrupt/generator-solid-react 
+@alexcorvis84 ^
 
 
 

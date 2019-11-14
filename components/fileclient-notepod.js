@@ -5,6 +5,7 @@ import { HelloAgent } from '../js/agents/HelloAgent.js';
 //import  '../libs/rdflib.min.js';
 import  '../libs/solid-file-client.bundle.js';
 import { slog } from '../js/helpers/system-messages.js';
+import { showFileInConsole } from '../js/helpers/debug.js';
 
 
 // Extend the LitElement base class
@@ -58,7 +59,7 @@ class FileclientNotepod extends LitElement {
         console.log(this.id+"receive webId "+app.webId)
 
         if (app.webId != null){
-          app.showFileInConsole(app.webId)
+          showFileInConsole(app.webId)
 
 
           app.fileClient.fetchAndParse(app.webId, 'text/turtle')
@@ -125,7 +126,7 @@ class FileclientNotepod extends LitElement {
 
       app.debug += "publicTypeIndexUrl  " + publicTypeIndexUrl+ "  "
       //  console.log(app)
-      app.showFileInConsole(publicTypeIndexUrl.value)
+      showFileInConsole(publicTypeIndexUrl.value)
       app.fileClient.fetchAndParse(publicTypeIndexUrl.value, 'text/turtle')
       .then(
         publicTypeIndex => {
@@ -146,7 +147,7 @@ class FileclientNotepod extends LitElement {
             const notesListUrl = publicTypeIndex.each($rdf.sym(notesListEntry[0].value), app.SOLID('instance'), null);
             console.log("notesListUrl", notesListUrl)
             app.notesListUrl = notesListUrl;
-            app.showFileInConsole(notesListUrl[0].value)
+            showFileInConsole(notesListUrl[0].value)
             app.fileClient.fetchAndParse(notesListUrl[0].value, 'text/turtle')
             .then(
               noteList => {
@@ -363,17 +364,7 @@ class FileclientNotepod extends LitElement {
 
 
 
-        showFileInConsole(file){
-          var app = this;
-          app.fileClient.readFile(file).then(
-            body => {
-              console.log(file +" content is : \n\n", body);
-            },
-            err => {
-              console.log(err)
-              slog(err, app.localName)
-            });
-          }
+
 
           render() {
             return html`

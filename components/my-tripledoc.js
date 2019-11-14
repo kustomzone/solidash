@@ -2,6 +2,11 @@
 //https://github.com/inrupt/solid-lib-comparison
 import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../js/agents/HelloAgent.js';
+import { showFileInConsole } from '../js/helpers/debug.js';
+/*
+import 'https://unpkg.com/rdflib/dist/rdflib.min.js';
+import 'https://unpkg.com/tripledoc@2.4/umd/index.js*/
+
 
 // Extend the LitElement base class
 class MyTripledoc extends LitElement {
@@ -11,7 +16,8 @@ class MyTripledoc extends LitElement {
       message: { type: String },
       name: {type: String},
       source: {type: String},
-      webId: {type: String}
+      webId: {type: String},
+      username: {type: String}
     };
   }
 
@@ -20,6 +26,7 @@ class MyTripledoc extends LitElement {
     this.message = 'Hello world! From my-element';
     this.name = "unknown"
     this.source = "unknown"
+    this.username = "unknown"
 
   }
 
@@ -30,10 +37,29 @@ class MyTripledoc extends LitElement {
       if (message.hasOwnProperty("webId")){
         app.webId = message.webId
         console.log(this.id+"receive webId "+app.webId)
+        if (app.webId != null){
+          app.updateUsername()
+        }
       }
     };
-
   }
+
+
+  updateUsername(){
+    var app = this;
+  //  showFileInConsole(app.webId)
+    //showFileInConsole('https://vincentt.inrupt.net/profile/card')
+    Tripledoc.fetchDocument(app.webId).then(
+      doc => {
+    //    console.log("DOC",doc)
+    //    console.log(doc.getStatements())
+        const person = doc.getSubject(app.webId);
+    //    console.log("personne",person)
+        app.username = person.getString("http://xmlns.com/foaf/0.1/name")
+      }
+    );
+  }
+
 
   render() {
     return html`
@@ -66,6 +92,7 @@ class MyTripledoc extends LitElement {
     <!-- Card Body -->
     <div class="card-body">
     <p>Name : ${this.name}</p>
+    <p>UserName : ${this.username}</p>
     <p>WebId : ${this.webId}</p>
     <p>${this.message} à ${this.source}</p>
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
