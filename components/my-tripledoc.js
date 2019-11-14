@@ -17,7 +17,8 @@ class MyTripledoc extends LitElement {
       name: {type: String},
       source: {type: String},
       webId: {type: String},
-      username: {type: String}
+      username: {type: String},
+      friends: {type: Array}
     };
   }
 
@@ -27,7 +28,9 @@ class MyTripledoc extends LitElement {
     this.name = "unknown"
     this.source = "unknown"
     this.username = "unknown"
-
+    this.friends = []
+    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
+    this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
   }
 
   firstUpdated(changedProperties) {
@@ -38,24 +41,29 @@ class MyTripledoc extends LitElement {
         app.webId = message.webId
         console.log(this.id+"receive webId "+app.webId)
         if (app.webId != null){
-          app.updateUsername()
+          app.getUserData()
         }
       }
     };
   }
 
 
-  updateUsername(){
+  getUserData(){
     var app = this;
-  //  showFileInConsole(app.webId)
+    showFileInConsole(app.webId)
     //showFileInConsole('https://vincentt.inrupt.net/profile/card')
     Tripledoc.fetchDocument(app.webId).then(
       doc => {
-    //    console.log("DOC",doc)
-    //    console.log(doc.getStatements())
+        //    console.log("DOC",doc)
+        //    console.log(doc.getStatements())
         const person = doc.getSubject(app.webId);
-    //    console.log("personne",person)
-        app.username = person.getString("http://xmlns.com/foaf/0.1/name")
+            console.log("personne",person)
+        app.username = person.getString(app.FOAF('name'))
+        app.friends = person.getAllRefs(app.FOAF('knows'))
+        console.log("Friends",app.friends)
+
+
+
       }
     );
   }
@@ -94,6 +102,16 @@ class MyTripledoc extends LitElement {
     <p>Name : ${this.name}</p>
     <p>UserName : ${this.username}</p>
     <p>WebId : ${this.webId}</p>
+    <p> Friends : ${this.friends.length}</p>
+
+    <pre class="pre-scrollable">
+    <ul id="messageslist">
+    ${this.friends.map((f) => html`<li>${f}</li>`)}
+    </ul>
+    </pre>
+
+
+
     <p>${this.message} à ${this.source}</p>
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
     </div>
