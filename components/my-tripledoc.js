@@ -18,7 +18,8 @@ class MyTripledoc extends LitElement {
       source: {type: String},
       webId: {type: String},
       username: {type: String},
-      friends: {type: Array}
+      friends: {type: Array},
+      notes: {type: Array}
     };
   }
 
@@ -29,6 +30,7 @@ class MyTripledoc extends LitElement {
     this.source = "unknown"
     this.username = "unknown"
     this.friends = []
+    this.notes = []
     this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
     this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
     this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
@@ -46,7 +48,7 @@ class MyTripledoc extends LitElement {
         console.log(this.id+"receive webId "+app.webId)
         if (app.webId != null){
           app.getUserData()
-          app.initNotePod()
+
         }
       }
     };
@@ -61,63 +63,224 @@ class MyTripledoc extends LitElement {
       doc => {
         //    console.log("DOC",doc)
         //    console.log(doc.getStatements())
-        const person = doc.getSubject(app.webId);
-            console.log("personne",person)
-        app.username = person.getString(app.FOAF('name'))
-        app.friends = person.getAllRefs(app.FOAF('knows'))
+        app.doc = doc;
+        app.person = doc.getSubject(app.webId);
+        console.log("personne",app.person)
+        app.username = app.person.getString(app.FOAF('name'))
+        app.friends = app.person.getAllRefs(app.FOAF('knows'))
         console.log("Friends",app.friends)
-
+        app.initNotePod()
+      },
+      err => {
+        console.log(err)
       }
     );
   }
 
   initNotePod(){
+    var app = this;
+    app.publicTypeIndexUrl = app.person.getRef(app.SOLID('publicTypeIndex'))
+    //console.log("publicTypeIndexUrl",app.publicTypeIndexUrl)
 
-  }
+    Tripledoc.fetchDocument(app.publicTypeIndexUrl).then(
+      publicTypeIndex => {
+        app.publicTypeIndex = publicTypeIndex;
+        app.notesListEntry = app.publicTypeIndex.findSubject(app.SOLID('forClass'), app.SCHEMA('TextDigitalDocument'));
+      //  console.log("app.notesListEntry",app.notesListEntry)
+        if (app.notesListEntry === null){
+          app.initialiseNotesList(app.person, app.publicTypeIndex)
+        }else{
+          app.notesListUrl = app.notesListEntry.getRef(app.SOLID("instance"))
+        //  console.log("notesListUrl",app.notesListUrl)
+          showFileInConsole(app.notesListUrl)
+          Tripledoc.fetchDocument(app.notesListUrl).then(
+            notesList => {
+              app.notesList = notesList;
+
+            //  console.log("app.notesList",notesList)
+              app.notesUri = notesList.findSubjects(app.RDF('type'),app.SCHEMA('TextDigitalDocument'))
+            //  console.log("notesUri",app.notesUri)
+              app.notes = []
+              app.notesUri.forEach(function (nuri){
+                //var subj = nuri.getLocalSubject()
+              //  console.log("nuri",nuri)
+                //  console.log("doc",nuri.getDocument())
+                var text = nuri.getString(app.SCHEMA('text'))
+                var date = nuri.getDateTime(app.SCHEMA('dateCreated'))
+              //  console.log(text, date)
+                var note = {}
+                note.text = text;
+                note.date = date
+                //text = nuri.getAllStrings()*/
+                app.notes = [... app.notes, note]
+                /*  var text = notesList.getDocument()
+                app.notes = [... app.notes, text]*/
+              })
+            //  console.log(app.notes)
+              //  var notes = app.notes
+              /*  app.notes = []
+
+              var notesSt = notesList.getStatements()
+              console.log("notesSt",notesSt)
+              var notes = []
+              notesSt.forEach(function(st){
+              console.log(st)
+
+              var subj = st.subject.value;
+              var note = notes.pop(subj)
+              if (note == undefined){
+              note = {}
+            }
+            console.log("N",note)*/
+            /*notes.forEach(function(n){
+            //  console.log(n.subject)
+            if (n.subject == subj){
+            note = n
+          }
+        })*/
+
+        /*  note.subject = st.subject.value;
+        note[st.predicate.value] = st.object.value;
+        console.log(note)*/
+        //  notes[subj] = note;
+
+        //  notes[subj] = note
+        //  app.notes = [...app.notes];
+
+        //  })
+
+        //      console.log(notes)
+        //app.notes = [...notes];
+      })
+    }
+
+  },
+  err => {console.log(err)}
+);
+}
+
+addNote(){
+  var app = this
+  var note = this.shadowRoot.getElementById('notearea').value.trim()
+  this.shadowRoot.getElementById('notearea').value = ""
+  console.log(note)
+  //var date = new Date().toUTCString();
+  //var str = aujourdhui.toUTCString();  // Obsolète ! Utilisez toUTCString()
+//  console.log(date)
+const newNote = app.notesList.addSubject();
+// Indicate that the Subject is a schema:TextDigitalDocument:
+ newNote.addRef(app.RDF('type'), app.SCHEMA('TextDigitalDocument'));
+ // Set the Subject's `schema:text` to the actual note contents:
+ newNote.addLiteral(app.SCHEMA('text'), note);
+ // Store the date the note was created (i.e. now):
+ newNote.addLiteral(app.SCHEMA('dateCreated'), new Date(Date.now()))
+
+ app.notesList.save([newNote]).then(
+   success=>{
+     console.log("success")
+     app.initNotePod()
+   },
+   err=>{
+     console.log(err)
+   });
 
 
-  render() {
-    return html`
-    <!-- Custom fonts for this template-->
-    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
-    <!-- Custom styles for this template-->
-    <link href="css/sb-admin-2.min.css" rel="stylesheet">
-    <link href="css/main.css" rel="stylesheet">
-
-    <!--<div class="col-xl-4 col-lg-5">-->
-    <div class="card shadow mb-4">
-    <!-- Card Header - Dropdown -->
-    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-    <h6 class="m-0 font-weight-bold text-primary">Name : ${this.name}</h6>
-    <div class="dropdown no-arrow">
-    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-    </a>
-    <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-    <div class="dropdown-header">Dropdown Header:</div>
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="#">Something else here</a>
-    </div>
-    </div>
-    </div>
-    <!-- Card Body -->
-    <div class="card-body">
-    <p>Name : ${this.name}</p>
-    <p>UserName : ${this.username}</p>
-    <p>WebId : ${this.webId}</p>
-    <p> Friends : ${this.friends.length}</p>
-
-    <pre class="pre-scrollable">
-    <ul id="messageslist">
-    ${this.friends.map((f) => html`<li>${f}</li>`)}
-    </ul>
-    </pre>
+}
 
 
+
+initialiseNotesList(profile,typeIndex){
+  console.log("creation a revoir")
+  /*// Get the root URL of the user's Pod:
+  const storage = profile.getRef(space.storage);
+
+  // Determine at what URL the new Document should be stored:
+  const notesListUrl = storage + 'public/notes.ttl';
+  // Create the new Document:
+  const notesList = createDocument(notesListUrl);
+  await notesList.save();
+
+  // Store a reference to that Document in the public Type Index for `schema:TextDigitalDocument`:
+  const typeRegistration = typeIndex.addSubject();
+  typeRegistration.addRef(rdf.type, solid.TypeRegistration)
+  typeRegistration.addRef(solid.instance, document.asRef())
+  typeRegistration.addRef(solid.forClass, schema.TextDigitalDocument)
+  await typeIndex.save([ typeRegistration ]);
+
+  // Then finally return the new Document:
+  return notesList;
+  */
+}
+
+
+
+
+
+render() {
+  const noteList = (notes) => html`
+  Note List with template (${notes.length})<br>
+  <ul>
+  ${notes.map((n) => html`
+    <li>
+    ${n.text}, ${n.date}<br>
+    </li>
+    `)}
+  </ul>
+  `;
+
+
+
+  return html`
+  <!-- Custom fonts for this template-->
+  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+  <!-- Custom styles for this template-->
+  <link href="css/sb-admin-2.min.css" rel="stylesheet">
+  <link href="css/main.css" rel="stylesheet">
+
+  <!--<div class="col-xl-4 col-lg-5">-->
+  <div class="card shadow mb-4">
+  <!-- Card Header - Dropdown -->
+  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+  <h6 class="m-0 font-weight-bold text-primary">Name : ${this.name}</h6>
+  <div class="dropdown no-arrow">
+  <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+  </a>
+  <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+  <div class="dropdown-header">Dropdown Header:</div>
+  <a class="dropdown-item" href="#">Action</a>
+  <a class="dropdown-item" href="#">Another action</a>
+  <div class="dropdown-divider"></div>
+  <a class="dropdown-item" href="#">Something else here</a>
+  </div>
+  </div>
+  </div>
+  <!-- Card Body -->
+  <div class="card-body">
+  <p>Name : ${this.name}</p>
+  <p>UserName : ${this.username}</p>
+  <p>WebId : ${this.webId}</p>
+  <p> Friends : ${this.friends.length}</p>
+
+  <pre class="pre-scrollable">
+  <ul id="messageslist">
+  ${this.friends.map((f) => html`<li>${f}</li>`)}
+  </ul>
+  </pre>
+
+
+  <textarea id ="notearea">
+
+  </textarea>
+  <br>
+  <button @click=${this.addNote}>Add note</button>
+  <br>
+  <p>
+
+  ${noteList(this.notes)}
+    </p>
 
     <p>${this.message} à ${this.source}</p>
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
