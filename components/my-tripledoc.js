@@ -86,223 +86,212 @@ class MyTripledoc extends LitElement {
       publicTypeIndex => {
         app.publicTypeIndex = publicTypeIndex;
         app.notesListEntry = app.publicTypeIndex.findSubject(app.SOLID('forClass'), app.SCHEMA('TextDigitalDocument'));
-      //  console.log("app.notesListEntry",app.notesListEntry)
+        //  console.log("app.notesListEntry",app.notesListEntry)
         if (app.notesListEntry === null){
-          app.initialiseNotesList(app.person, app.publicTypeIndex)
+          app.notesListUrl = app.initialiseNotesList(app.person, app.publicTypeIndex)
         }else{
           app.notesListUrl = app.notesListEntry.getRef(app.SOLID("instance"))
-        //  console.log("notesListUrl",app.notesListUrl)
-          showFileInConsole(app.notesListUrl)
-          Tripledoc.fetchDocument(app.notesListUrl).then(
-            notesList => {
-              app.notesList = notesList;
+          //  console.log("notesListUrl",app.notesListUrl)
 
-            //  console.log("app.notesList",notesList)
-              app.notesUri = notesList.findSubjects(app.RDF('type'),app.SCHEMA('TextDigitalDocument'))
-            //  console.log("notesUri",app.notesUri)
-              app.notes = []
-              app.notesUri.forEach(function (nuri){
-                //var subj = nuri.getLocalSubject()
-              //  console.log("nuri",nuri)
-                //  console.log("doc",nuri.getDocument())
-                var text = nuri.getString(app.SCHEMA('text'))
-                var date = nuri.getDateTime(app.SCHEMA('dateCreated'))
-              //  console.log(text, date)
-                var note = {}
-                note.text = text;
-                note.date = date
-                //text = nuri.getAllStrings()*/
-                app.notes = [... app.notes, note]
-                /*  var text = notesList.getDocument()
-                app.notes = [... app.notes, text]*/
-              })
-            //  console.log(app.notes)
-              //  var notes = app.notes
-              /*  app.notes = []
+        }
+        app.getNotes()
+      },
+      err => {console.log(err)}
+    );
+  }
 
-              var notesSt = notesList.getStatements()
-              console.log("notesSt",notesSt)
-              var notes = []
-              notesSt.forEach(function(st){
-              console.log(st)
 
-              var subj = st.subject.value;
-              var note = notes.pop(subj)
-              if (note == undefined){
-              note = {}
-            }
-            console.log("N",note)*/
-            /*notes.forEach(function(n){
-            //  console.log(n.subject)
-            if (n.subject == subj){
-            note = n
-          }
-        })*/
+  getNotes(){
+    var app = this;
+    console.log("getNotes at ",app.notesListUrl)
+    showFileInConsole(app.notesListUrl)
+    Tripledoc.fetchDocument(app.notesListUrl).then(
+      notesList => {
+        app.notesList = notesList;
 
-        /*  note.subject = st.subject.value;
-        note[st.predicate.value] = st.object.value;
-        console.log(note)*/
-        //  notes[subj] = note;
-
-        //  notes[subj] = note
-        //  app.notes = [...app.notes];
-
-        //  })
-
-        //      console.log(notes)
-        //app.notes = [...notes];
+        //  console.log("app.notesList",notesList)
+        app.notesUri = notesList.findSubjects(app.RDF('type'),app.SCHEMA('TextDigitalDocument'))
+        //  console.log("notesUri",app.notesUri)
+        app.notes = []
+        app.notesUri.forEach(function (nuri){
+          //var subj = nuri.getLocalSubject()
+          //  console.log("nuri",nuri)
+          //  console.log("doc",nuri.getDocument())
+          var text = nuri.getString(app.SCHEMA('text'))
+          var date = nuri.getDateTime(app.SCHEMA('dateCreated'))
+          //  console.log(text, date)
+          var note = {}
+          note.text = text;
+          note.date = date
+          //text = nuri.getAllStrings()*/
+          app.notes = [... app.notes, note]
+        })
       })
     }
 
-  },
-  err => {console.log(err)}
-);
-}
-
-addNote(){
-  var app = this
-  var note = this.shadowRoot.getElementById('notearea').value.trim()
-  this.shadowRoot.getElementById('notearea').value = ""
-  console.log(note)
-  //var date = new Date().toUTCString();
-  //var str = aujourdhui.toUTCString();  // Obsolète ! Utilisez toUTCString()
-//  console.log(date)
-const newNote = app.notesList.addSubject();
-// Indicate that the Subject is a schema:TextDigitalDocument:
- newNote.addRef(app.RDF('type'), app.SCHEMA('TextDigitalDocument'));
- // Set the Subject's `schema:text` to the actual note contents:
- newNote.addLiteral(app.SCHEMA('text'), note);
- // Store the date the note was created (i.e. now):
- newNote.addLiteral(app.SCHEMA('dateCreated'), new Date(Date.now()))
-
- app.notesList.save([newNote]).then(
-   success=>{
-     console.log("success")
-     app.initNotePod()
-   },
-   err=>{
-     console.log(err)
-   });
 
 
-}
+    addNote(){
+      var app = this
+      var note = this.shadowRoot.getElementById('notearea').value.trim()
+      this.shadowRoot.getElementById('notearea').value = ""
+      console.log(note)
+      //var date = new Date().toUTCString();
+      //var str = aujourdhui.toUTCString();  // Obsolète ! Utilisez toUTCString()
+      //  console.log(date)
+      const newNote = app.notesList.addSubject();
+      // Indicate that the Subject is a schema:TextDigitalDocument:
+      newNote.addRef(app.RDF('type'), app.SCHEMA('TextDigitalDocument'));
+      // Set the Subject's `schema:text` to the actual note contents:
+      newNote.addLiteral(app.SCHEMA('text'), note);
+      // Store the date the note was created (i.e. now):
+      newNote.addLiteral(app.SCHEMA('dateCreated'), new Date(Date.now()))
+
+      app.notesList.save([newNote]).then(
+        success=>{
+          console.log("success")
+          app.initNotePod()
+        },
+        err=>{
+          console.log(err)
+        });
+
+
+      }
 
 
 
-initialiseNotesList(profile,typeIndex){
-  console.log("creation a revoir")
-  /*// Get the root URL of the user's Pod:
-  const storage = profile.getRef(space.storage);
+      initialiseNotesList(profile,typeIndex){
+        var app = this;
+        console.log("creation a revoir")
+        const storage = profile.getRef(app.SPACE('storage'))
+        console.log("storage",storage)
+        const notesListUrl = storage + 'public/notes.ttl';
 
-  // Determine at what URL the new Document should be stored:
-  const notesListUrl = storage + 'public/notes.ttl';
-  // Create the new Document:
-  const notesList = createDocument(notesListUrl);
-  await notesList.save();
+        const notesList = Tripledoc.createDocument(notesListUrl);
+        notesList.save();
 
-  // Store a reference to that Document in the public Type Index for `schema:TextDigitalDocument`:
-  const typeRegistration = typeIndex.addSubject();
-  typeRegistration.addRef(rdf.type, solid.TypeRegistration)
-  typeRegistration.addRef(solid.instance, document.asRef())
-  typeRegistration.addRef(solid.forClass, schema.TextDigitalDocument)
-  await typeIndex.save([ typeRegistration ]);
+        // Store a reference to that Document in the public Type Index for `schema:TextDigitalDocument`:
+        const typeRegistration = typeIndex.addSubject();
+        typeRegistration.addRef(app.RDF('type'), app.SOLID('TypeRegistration'))
+        typeRegistration.addRef(app.SOLID('instance'), notesList.asRef())
+        typeRegistration.addRef(app.SOLID('forClass'), app.SCHEMA('TextDigitalDocument'))
+        typeIndex.save([ typeRegistration ]);
 
-  // Then finally return the new Document:
-  return notesList;
-  */
-}
+        return notesListUrl
+        /*// Get the root URL of the user's Pod:
+        const storage = profile.getRef(space.storage);
 
+        // Determine at what URL the new Document should be stored:
+        const notesListUrl = storage + 'public/notes.ttl';
+        // Create the new Document:
+        const notesList = createDocument(notesListUrl);
+        await notesList.save();
 
+        // Store a reference to that Document in the public Type Index for `schema:TextDigitalDocument`:
+        const typeRegistration = typeIndex.addSubject();
+        typeRegistration.addRef(rdf.type, solid.TypeRegistration)
+        typeRegistration.addRef(solid.instance, document.asRef())
+        typeRegistration.addRef(solid.forClass, schema.TextDigitalDocument)
+        await typeIndex.save([ typeRegistration ]);
 
-
-
-render() {
-  const noteList = (notes) => html`
-  Note List with template (${notes.length})<br>
-  <ul>
-  ${notes.map((n) => html`
-    <li>
-    ${n.text}, ${n.date}<br>
-    </li>
-    `)}
-  </ul>
-  `;
-
-
-
-  return html`
-  <!-- Custom fonts for this template-->
-  <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
-  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
-
-  <!-- Custom styles for this template-->
-  <link href="css/sb-admin-2.min.css" rel="stylesheet">
-  <link href="css/main.css" rel="stylesheet">
-
-  <!--<div class="col-xl-4 col-lg-5">-->
-  <div class="card shadow mb-4">
-  <!-- Card Header - Dropdown -->
-  <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-  <h6 class="m-0 font-weight-bold text-primary">Name : ${this.name}</h6>
-  <div class="dropdown no-arrow">
-  <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-  <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-  </a>
-  <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
-  <div class="dropdown-header">Dropdown Header:</div>
-  <a class="dropdown-item" href="#">Action</a>
-  <a class="dropdown-item" href="#">Another action</a>
-  <div class="dropdown-divider"></div>
-  <a class="dropdown-item" href="#">Something else here</a>
-  </div>
-  </div>
-  </div>
-  <!-- Card Body -->
-  <div class="card-body">
-  <p>Name : ${this.name}</p>
-  <p>UserName : ${this.username}</p>
-  <p>WebId : ${this.webId}</p>
-  <p> Friends : ${this.friends.length}</p>
-
-  <pre class="pre-scrollable">
-  <ul id="messageslist">
-  ${this.friends.map((f) => html`<li>${f}</li>`)}
-  </ul>
-  </pre>
-
-
-  <textarea id ="notearea">
-
-  </textarea>
-  <br>
-  <button @click=${this.addNote}>Add note</button>
-  <br>
-  <p>
-
-  ${noteList(this.notes)}
-    </p>
-
-    <p>${this.message} à ${this.source}</p>
-    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
-    </div>
-    <small>https://forum.solidproject.org/t/notepod-a-note-taking-app-for-solid/2371</small><br>
-    <small>https://github.com/jeff-zucker/solid-file-client</small><br>
-    <small>https://solidproject.org/for-developers/apps/first-app/2-understanding-solid</small>
-    </div>
-    <!--  </div>-->
+        // Then finally return the new Document:
+        return notesList;
+        */
+      }
 
 
 
 
-    `;
-  }
 
-  clickHandler(event) {
-    //console.log(event.target);
-    console.log(this.agent)
-    this.agent.send('agent1', 'Hello agent1!');
-  }
+      render() {
+        const noteList = (notes) => html`
+        Note List with template (${notes.length})<br>
+        <ul>
+        ${notes.map((n) => html`
+          <li>
+          ${n.text}, ${n.date}<br>
+          </li>
+          `)}
+          </ul>
+          `;
 
-}
-// Register the new element with the browser.
-customElements.define('my-tripledoc', MyTripledoc);
+
+
+          return html`
+          <!-- Custom fonts for this template-->
+          <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+          <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+          <!-- Custom styles for this template-->
+          <link href="css/sb-admin-2.min.css" rel="stylesheet">
+          <link href="css/main.css" rel="stylesheet">
+
+          <!--<div class="col-xl-4 col-lg-5">-->
+          <div class="card shadow mb-4">
+          <!-- Card Header - Dropdown -->
+          <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Name : ${this.name}</h6>
+          <div class="dropdown no-arrow">
+          <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+          <div class="dropdown-header">Dropdown Header:</div>
+          <a class="dropdown-item" href="#">Action</a>
+          <a class="dropdown-item" href="#">Another action</a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a>
+          </div>
+          </div>
+          </div>
+          <!-- Card Body -->
+          <div class="card-body">
+          <p>Name : ${this.name}</p>
+          <p>UserName : ${this.username}</p>
+          <p>WebId : ${this.webId}</p>
+          <p> Friends : ${this.friends.length}</p>
+
+          <pre class="pre-scrollable">
+          <ul id="messageslist">
+          ${this.friends.map((f) => html`<li>${f}</li>`)}
+          </ul>
+          </pre>
+
+
+          <textarea id ="notearea">
+
+          </textarea>
+          <br>
+          <button @click=${this.addNote}>Add note</button>
+          <br>
+          <p>
+
+          ${noteList(this.notes)}
+          </p>
+
+          <p>${this.message} à ${this.source}</p>
+          <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
+          </div>
+          <small>source = https://github.com/scenaristeur/solidash/blob/master/components/my-tripledoc.js</small>
+          <small>https://forum.solidproject.org/t/notepod-a-note-taking-app-for-solid/2371</small><br>
+          <small>https://github.com/jeff-zucker/solid-file-client</small><br>
+          <small>https://solidproject.org/for-developers/apps/first-app/2-understanding-solid</small>
+          </div>
+          <!--  </div>-->
+
+
+
+
+          `;
+        }
+
+        clickHandler(event) {
+          //console.log(event.target);
+          console.log(this.agent)
+          this.agent.send('agent1', 'Hello agent1!');
+        }
+
+      }
+      // Register the new element with the browser.
+      customElements.define('my-tripledoc', MyTripledoc);
