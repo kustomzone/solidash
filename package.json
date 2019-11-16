@@ -39,9 +39,10 @@
     "express": "^4.17.1",
     "jquery": "3.4.1",
     "jquery.easing": "^1.4.1",
-    "rdf-namespaces": "^1.5.0",
+    "popper.js": "^1.16.0",
+    "rdf-namespaces": "^1.6.0",
     "rdflib": "^1.0.6",
-    "tripledoc": "^2.2.0"
+    "tripledoc": "^2.4.0"
   },
   "devDependencies": {
     "browser-sync": "2.26.7",
