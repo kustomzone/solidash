@@ -1,0 +1,47 @@
+<html>
+<head>
+  <!-- tripledoc import https://forum.solidproject.org/t/help-using-different-libs-rdflibjs-tripledoc-ldflex-solid-file-client/2388/3?u=smag0 -->
+  <script src="https://unpkg.com/rdflib/dist/rdflib.min.js"></script>
+  <script>
+  window.rdflib = window.$rdf;
+  </script>
+  <script src="https://unpkg.com/tripledoc@2.4/umd/index.js"></script>
+
+  <script type="module" src="./components/minimal-element.js"></script>
+  <script type="module" src="./components/pad-element.js"></script>
+  <script type="module" src="./js/helpers/messages-element.js"></script>
+</head>
+<body>
+  Before
+  <minimal-element
+  name="Minimal"
+  message="my message"
+  other = "other attribute">
+</minimal-element>
+<br>
+After<br>
+<hr>
+
+Before PAD
+<pad-element
+name="Pad"
+message="my message"
+other = "other attribute">
+</pad-element>
+<br>
+After PAD<br>
+<hr>
+
+Messages Before
+
+<messages-element
+name="Messages"
+message="one message"
+other = "other attribute">
+</messages-element>
+
+<br>
+Messages After
+</body>
+
+</html>

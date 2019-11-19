@@ -10,8 +10,9 @@ class MySidebar extends LitElement{
 
   firstUpdated(){
     // Toggle the side navigation
-    console.log("MENU SIDEBAR",$("#sidebarToggle"))
+
     $("#sidebarToggle, #sidebarToggleTop").on('click', function(e) {
+          console.log("MENU SIDEBAR",$("#sidebarToggle"))
       $("body").toggleClass("sidebar-toggled");
       $(".sidebar").toggleClass("toggled");
       if ($(".sidebar").hasClass("toggled")) {
@@ -38,7 +39,15 @@ class MySidebar extends LitElement{
   }
 
 sbtoggle(){
-
+  console.log("toggle")
+//  this.view.element.classList.add('sidebar-toggled');
+//  $("body").toggleClass("sidebar-toggled");
+  document.getElementById("page-top").classList.add('sidebar-toggled');
+//  document.querySelectorAll(".sidebar").classList.add('sidebar-toggled');
+  //$(".sidebar").toggleClass("toggled");
+  if ($(".sidebar").hasClass("toggled")) {
+    $('.sidebar .collapse').collapse('hide');
+  };
 }
 
 
