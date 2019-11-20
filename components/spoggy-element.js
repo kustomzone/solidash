@@ -57,6 +57,7 @@ class SpoggyElement extends LitElement {
     <!--<link href="../vendor/visjs/vis-network.min.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="../vendor/vis-network.min.js"></script>-->
     <!--   <script type="text/javascript" src="./js/network.js"></script> -->
+      <link href="../vendor/visjs/dist/vis-network.css" rel="stylesheet" type="text/css">
     <style type="text/css">
     #mynetwork {
       width: 600px;
@@ -87,7 +88,7 @@ class SpoggyElement extends LitElement {
     <button id="capture_graphe"  @click=${this.attrappeCommande}>Capturer jpg</button> /c
     </fieldset>
     </div>
-
+  
 
     <div id="mynetwork" bgcolor="#E6E6FA">  </div>
     <br>
