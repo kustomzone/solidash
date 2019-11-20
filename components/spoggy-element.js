@@ -6,6 +6,9 @@ import { HelloAgent } from '../js/agents/HelloAgent.js';
 import  { catchCommande } from "../minimal/js/spoggy.js";
 import   "../minimal/js/solid.js";
 
+//new
+import { Spoggy } from "../minimal/js/spoggy1.js";
+
 
 // Extend the LitElement base class
 class SpoggyElement extends LitElement {
@@ -21,6 +24,9 @@ class SpoggyElement extends LitElement {
     super();
     this.message = 'Hello world! Spoggy-Element';
     this.name = "unknown"
+    this.spoggy = new Spoggy();
+    console.log("SP",this.spoggy)
+    this.spoggy.parle();
 
   }
 
@@ -34,11 +40,11 @@ class SpoggyElement extends LitElement {
 
         console.log(this.id+" receive webId "+app.webId)
         if (app.webId != null){
-        //  app.getUserData()
+          //  app.getUserData()
           app.logged = true
         }else{
           app.logged = false
-        //  app.notes = []
+          //  app.notes = []
         }
       }
     };
@@ -67,15 +73,15 @@ class SpoggyElement extends LitElement {
     <script type="text/javascript" src="./js/solid.js"></script>-->
     <p>Name : ${this.name}</p>
     <p>${this.message}</p>
-    g
-    <div style="float:auto">
+
+    <div>
     <fieldset>
     <legend>Outils</legend>
     <button
     id="nouveau_graph"
-     @click=${this.attrappeCommande}
+    @click=${this.attrappeCommande}
 
-     >Nouveau</button> /n
+    >Nouveau</button> /n
     <!--  <button id="importer_btn" onclick="catchCommande({value:'/i'})">Ouvrir</button> /i-->
     <button id="save_to_pod" onclick="open_ub()">Universal Browser</button> /a
     <button id="capture_graphe"  @click=${this.attrappeCommande}>Capturer jpg</button> /c
@@ -83,8 +89,9 @@ class SpoggyElement extends LitElement {
     </div>
 
 
-    <div style="float:left" id="mynetwork" bgcolor="#E6E6FA">  </div>
-    g
+    <div id="mynetwork" bgcolor="#E6E6FA">  </div>
+    <br>
+
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
 
     `;
@@ -102,32 +109,10 @@ class SpoggyElement extends LitElement {
   }
 
   init(){
-    // create an array with nodes
-    var nodes = new vis.DataSet([
-      {id: 1, label: 'Node 1'},
-      {id: 2, label: 'Node 2'},
-      {id: 3, label: 'Node 3'},
-      {id: 4, label: 'Node 4'},
-      {id: 5, label: 'Node 5'}
-    ]);
-
-    // create an array with edges
-    var edges = new vis.DataSet([
-      {from: 1, to: 3},
-      {from: 1, to: 2},
-      {from: 2, to: 4},
-      {from: 2, to: 5},
-      {from: 3, to: 3}
-    ]);
-
     // create a network
     var container = this.shadowRoot.getElementById('mynetwork');
-    var data = {
-      nodes: nodes,
-      edges: edges
-    };
-    var options = {};
-    var network = new vis.Network(container, data, options);
+    this.spoggy.network(container)
+console.log("SPOGGY PEUPLE", this.spoggy)
   }
 
 }
