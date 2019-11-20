@@ -1,6 +1,7 @@
 // Import the LitElement base class and html helper function
 import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../js/agents/HelloAgent.js';
+import  './solid-login.js';
 
 // Extend the LitElement base class
 class PadElement extends LitElement {
@@ -10,27 +11,42 @@ class PadElement extends LitElement {
       message: { type: String },
       name: {type: String},
       count: {type: Number},
-      notes: {type: Array}
+      notes: {type: Array},
+      logged: {type: Boolean}
+
     };
   }
 
   constructor() {
     super();
     this.message = 'Hello world! From minimal-element';
-    this.name = "unknown"
+    this.name = "Pad"
     this.count = 0;
-  this.notes = []
+    this.notes = []
+    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
+    this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
+    this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
+    this.SCHEMA = new $rdf.Namespace('http://schema.org/');
+    this.SPACE = new $rdf.Namespace('http://www.w3.org/ns/pim/space#');
+    this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
+    this.webId = null
+    this.logged = false
   }
 
   firstUpdated(changedProperties) {
+    var app=this
     this.agent = new HelloAgent(this.name);
     this.agent.receive = function(from, message) {
       if (message.hasOwnProperty("webId")){
         app.webId = message.webId
+
         console.log(this.id+"receive webId "+app.webId)
         if (app.webId != null){
           app.getUserData()
-
+          app.logged = true
+        }else{
+          app.logged = true
+          app.notes = []
         }
       }
     };
@@ -38,7 +54,7 @@ class PadElement extends LitElement {
 
   getUserData(){
     var app = this;
-    showFileInConsole(app.webId)
+    console.log(app.webId)
     //showFileInConsole('https://vincentt.inrupt.net/profile/card')
     Tripledoc.fetchDocument(app.webId).then(
       doc => {
@@ -85,7 +101,7 @@ class PadElement extends LitElement {
   getNotes(){
     var app = this;
     console.log("getNotes at ",app.notesListUrl)
-    showFileInConsole(app.notesListUrl)
+    //showFileInConsole(app.notesListUrl)
     Tripledoc.fetchDocument(app.notesListUrl).then(
       notesList => {
         app.notesList = notesList;
@@ -182,48 +198,47 @@ class PadElement extends LitElement {
       }
 
 
-  render() {
+      render() {
 
-    const noteList = (notes) => html`
-    Note List with template (${notes.length})<br>
-    <ul>
-    ${notes.map((n) => html`
-      <li>
-      ${n.text}, ${n.date}<br>
-      </li>
-      `)}
-      </ul>
-      `;
+        const noteList = (notes) => html`
+        Note List with template (${notes.length})<br>
+        <ul>
+        ${notes.map((n) => html`
+          <li>
+          ${n.text}, ${n.date}<br>
+          </li>
+          `)}
+          </ul>
+          `;
 
-    return html`
-    <p>Name : ${this.name}</p>
-    <p>Count: ${this.count}</p>
-    <p>${this.message}</p>
-    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
+          return html`
+          <p>
+          Name : ${this.name}
+          <solid-login></solid-login>
+          </p>
 
+          <p>
+          <textarea id ="notearea">
+          </textarea>
+          <br>
+          <button @click=${this.addNote}>Add note</button>
+          </p>
 
-    <textarea id ="notearea">
+          <p>
+          ${noteList(this.notes)}
+          </p>
 
-    </textarea>
-    <br>
-    <button @click=${this.addNote}>Add note</button>
-    <br>
-    <p>
+          <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
+          `;
+        }
 
-    ${noteList(this.notes)}
-    </p>
+        clickHandler(event) {
+          this.count++
+          //console.log(event.target);
+          console.log(this.agent)
+          this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
+        }
 
-
-    `;
-  }
-
-  clickHandler(event) {
-    this.count++
-    //console.log(event.target);
-    console.log(this.agent)
-    this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
-  }
-
-}
-// Register the new element with the browser.
-customElements.define('pad-element', PadElement);
+      }
+      // Register the new element with the browser.
+      customElements.define('pad-element', PadElement);
