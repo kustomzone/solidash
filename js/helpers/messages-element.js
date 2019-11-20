@@ -31,7 +31,7 @@ class MessagesElement extends LitElement {
       console.log("messages",app.messages)
       if (message.hasOwnProperty("webId")){
         app.webId = message.webId
-        console.log(this.id+"receive webId "+app.webId)
+        console.log(this.id+" receive webId "+app.webId)
       }
     };
   }

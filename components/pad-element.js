@@ -40,12 +40,12 @@ class PadElement extends LitElement {
       if (message.hasOwnProperty("webId")){
         app.webId = message.webId
 
-        console.log(this.id+"receive webId "+app.webId)
+        console.log(this.id+" receive webId "+app.webId)
         if (app.webId != null){
           app.getUserData()
           app.logged = true
         }else{
-          app.logged = true
+          app.logged = false
           app.notes = []
         }
       }
