@@ -205,7 +205,7 @@ class PadElement extends LitElement {
         <ul>
         ${notes.map((n) => html`
           <li>
-          ${n.text}, ${n.date}<br>
+          ${n.text}, ${n.date}
           </li>
           `)}
           </ul>

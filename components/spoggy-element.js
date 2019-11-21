@@ -5,6 +5,7 @@ import { HelloAgent } from '../js/agents/HelloAgent.js';
 
 import  { catchCommande } from "../minimal/js/spoggy.js";
 import   "../minimal/js/solid.js";
+import  './solid-login.js';
 
 //new
 import { Spoggy } from "../minimal/js/spoggy1.js";
@@ -16,7 +17,10 @@ class SpoggyElement extends LitElement {
   static get properties() {
     return {
       message: { type: String },
-      name: {type: String}
+      name: {type: String},
+      webId: {type: String},
+      friends: {type: Array},
+      username: {type: Array}
     };
   }
 
@@ -25,8 +29,18 @@ class SpoggyElement extends LitElement {
     this.message = 'Hello world! Spoggy-Element';
     this.name = "unknown"
     this.spoggy = new Spoggy();
+    this.browser= new Spoggy();
     console.log("SP",this.spoggy)
     this.spoggy.parle();
+    this.webId = null;
+    this.username = "";
+    this.friends = [];
+    this.VCARD = new $rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
+    this.FOAF = new $rdf.Namespace('http://xmlns.com/foaf/0.1/');
+    this.SOLID = new $rdf.Namespace('http://www.w3.org/ns/solid/terms#');
+    this.SCHEMA = new $rdf.Namespace('http://schema.org/');
+    this.SPACE = new $rdf.Namespace('http://www.w3.org/ns/pim/space#');
+    this.RDF = new $rdf.Namespace('http://www.w3.org/1999/02/22-rdf-syntax-ns#');
 
   }
 
@@ -37,28 +51,33 @@ class SpoggyElement extends LitElement {
       console.log(this.id+" RECEIVE "+JSON.stringify(message))
       if (message.hasOwnProperty("webId")){
         app.webId = message.webId
+        var cont = app.shadowRoot.getElementById("browsernetwork")
 
         console.log(this.id+" receive webId "+app.webId)
         if (app.webId != null){
           //  app.getUserData()
           app.logged = true
+          app.getUserData(app.webId)
+          app.updateGraph(cont,app.webId)
         }else{
           app.logged = false
+          app.friends = [];
+          app.username = "";
           //  app.notes = []
         }
       }else   if (message.hasOwnProperty("action")){
         switch(message.action) {
           case "editNode":
-            // code block
-            app.nodePopupOpen(message.params)
-            break;
-            case "editEdgeWithoutDrag":
-              // code block
-              app.editEdgeWithoutDrag(message.params)
-              break;
+          // code block
+          app.editNode(message.params)
+          break;
+          case "editEdgeWithoutDrag":
+          // code block
+          app.editEdgeWithoutDrag(message.params)
+          break;
           default:
-            // code block
-            console.log("action inconnue")
+          // code block
+          console.log("action inconnue")
         }
       }
     };
@@ -66,50 +85,77 @@ class SpoggyElement extends LitElement {
   }
 
 
-nodePopupOpen(params){
-  console.log("open",params)
-  var data = params.data;
-  var cancelAction = params.cancelAction ;
-  var callback = params.callback ;
-  this.shadowRoot.getElementById('node-id').value = data.id || "";
-  this.shadowRoot.getElementById('node-label').value = data.label;
-//  this.shadowRoot.getElementById('node-shape').value = data.shape || "ellipse";
-  this.shadowRoot.getElementById('node-saveButton').onclick = this.saveNodeData.bind(this, data, callback);
-  //this.shadowRoot.getElementById('node-cancelButton').onclick = cancelAction.bind(this, callback);
-  this.shadowRoot.getElementById('nodePopUp').style.display = 'block';
-  this.shadowRoot.getElementById('node-label').onkeyup = this.nodeNameChanged.bind(this, data, callback);
-}
-
-nodeNameChanged(event,data, callback) {
-  if(event.key === 'Enter') {
-    event.preventDefault();
-    //  document.getElementById("valider").click();
-    this.saveNodeData(data, callback)
+  updateGraph(container,data,replace=true){
+    console.log(container);
+    console.log(typeof data, data)
   }
-}
 
-edgeNameChanged(event,data, callback) {
-  if(event.key === 'Enter') {
-    event.preventDefault();
-    //  document.getElementById("valider").click();
-    this.saveEdgeData(data, callback)
+  getUserData(){
+    var app = this;
+    console.log(app.webId)
+    //showFileInConsole('https://vincentt.inrupt.net/profile/card')
+    Tripledoc.fetchDocument(app.webId).then(
+      doc => {
+        //    console.log("DOC",doc)
+        //    console.log(doc.getStatements())
+        app.doc = doc;
+        app.person = doc.getSubject(app.webId);
+        console.log("personne",app.person)
+        app.username = app.person.getString(app.FOAF('name'))
+        app.friends = app.person.getAllRefs(app.FOAF('knows'))
+        console.log("Friends",app.friends)
+        //  app.initNotePod()
+      },
+      err => {
+        console.log(err)
+      }
+    );
   }
-}
-saveNodeData(data, callback) {
-  data.label = this.shadowRoot.getElementById('node-label').value;
-/*  console.log(this.shadowRoot.getElementById('node-shape'))
-  data.shape = this.shadowRoot.getElementById('node-shape').value;
-  console.log(data.shape)
-  data.color = {};
-data.color.background = this.shadowRoot.getElementById('colpicbody').value;
-  data.color.border =  this.shadowRoot.getElementById('colpicborder').value;
-  this.shadowRoot.getElementById('bodycolorpicker').value = this.shadowRoot.getElementById('colpicbody').value;
-  this.shadowRoot.getElementById('bordercolorpicker').value = this.shadowRoot.getElementById('colpicborder').value;
-  var image_url = this.shadowRoot.getElementById('node-image-url').value || "";
-  if (data.shape == "image" || data.shape == "circularImage" && image_url.length > 0){
+
+  editNode(params){
+    console.log("open",params)
+    var data = params.data;
+    var cancelAction = params.cancelAction ;
+    var callback = params.callback ;
+    this.shadowRoot.getElementById('node-id').value = data.id || "";
+    this.shadowRoot.getElementById('node-label').value = data.label;
+    //  this.shadowRoot.getElementById('node-shape').value = data.shape || "ellipse";
+    this.shadowRoot.getElementById('node-saveButton').onclick = this.saveNodeData.bind(this, data, callback);
+    this.shadowRoot.getElementById('node-cancelButton').onclick = this.cancelAction.bind(this, callback);
+    this.shadowRoot.getElementById('nodePopUp').style.display = 'block';
+    this.shadowRoot.getElementById('node-label').onkeyup = this.nodeNameChanged.bind(this, data, callback);
+  }
+
+  nodeNameChanged(event,data, callback) {
+    if(event.key === 'Enter') {
+      event.preventDefault();
+      //  document.getElementById("valider").click();
+      this.saveNodeData(data, callback)
+    }
+  }
+
+  edgeNameChanged(event,data, callback) {
+    if(event.key === 'Enter') {
+      event.preventDefault();
+      //  document.getElementById("valider").click();
+      this.saveEdgeData(data, callback)
+    }
+  }
+  saveNodeData(data, callback) {
+    data.label = this.shadowRoot.getElementById('node-label').value;
+    /*  console.log(this.shadowRoot.getElementById('node-shape'))
+    data.shape = this.shadowRoot.getElementById('node-shape').value;
+    console.log(data.shape)
+    data.color = {};
+    data.color.background = this.shadowRoot.getElementById('colpicbody').value;
+    data.color.border =  this.shadowRoot.getElementById('colpicborder').value;
+    this.shadowRoot.getElementById('bodycolorpicker').value = this.shadowRoot.getElementById('colpicbody').value;
+    this.shadowRoot.getElementById('bordercolorpicker').value = this.shadowRoot.getElementById('colpicborder').value;
+    var image_url = this.shadowRoot.getElementById('node-image-url').value || "";
+    if (data.shape == "image" || data.shape == "circularImage" && image_url.length > 0){
     data.image = image_url;
   }
-*/
+  */
   console.log(data)
   //  this.fitAndFocus(data.id)
   this.clearNodePopUp();
@@ -172,52 +218,63 @@ saveEdgeData(data, callback) {
   callback(data);
 }
 
-  render() {
+render() {
+  const friendsList = (friends) => html`
+  Friends List (${friends.length})<br>
+  <ul>
+  ${friends.map((f) => html`
+    <li>
+    - ${f}
+    </li>
+    `)}
+    </ul>
+    `;
+
     return html`
     <!-- Graph Vis -->
     <!--<link href="../vendor/visjs/vis-network.min.css" rel="stylesheet" type="text/css" />
     <script type="text/javascript" src="../vendor/vis-network.min.js"></script>-->
     <!--   <script type="text/javascript" src="./js/network.js"></script> -->
-      <link href="../vendor/visjs/dist/vis-network.css" rel="stylesheet" type="text/css">
+    <link href="../vendor/visjs/dist/vis-network.css" rel="stylesheet" type="text/css">
     <style type="text/css">
-    #mynetwork {
+    .network {
       width: 600px;
       height: 400px;
       border: 1px solid lightgray;
     }
     #operation {
-  font-size:28px;
-}
-#nodePopUp {
-  display:none;
-  position:absolute;
-  top:350px;
-  left:170px;
-  z-index:299;
-  width:250px;
-  height:120px;
-  background-color: #f9f9f9;
-  border-style:solid;
-  border-width:3px;
-  border-color: #5394ed;
-  padding:10px;
-  text-align: center;
-}
-#edge-popUp {
-  display:none;
-  position:absolute;
-  top:350px;
-  left:170px;
-  z-index:299;
-  width:250px;
-  height:90px;
-  background-color: #f9f9f9;
-  border-style:solid;
-  border-width:3px;
-  border-color: #5394ed;
-  padding:10px;
-  text-align: center;
-}
+      font-size:28px;
+    }
+    #nodePopUp {
+      display:none;
+      position:absolute;
+      top:350px;
+      left:170px;
+      z-index:299;
+      width:250px;
+      height:120px;
+      background-color: #f9f9f9;
+      border-style:solid;
+      border-width:3px;
+      border-color: #5394ed;
+      padding:10px;
+      text-align: center;
+    }
+    #edge-popUp {
+      display:none;
+      position:absolute;
+      top:350px;
+      left:170px;
+      z-index:299;
+      width:250px;
+      height:90px;
+      background-color: #f9f9f9;
+      border-style:solid;
+      border-width:3px;
+      border-color: #5394ed;
+      padding:10px;
+      text-align: center;
+    }
     </style>
     <!-- Spoggy -->
     <!--  <script type="text/javascript" src="./js/levels.js"></script> -->
@@ -227,6 +284,9 @@ saveEdgeData(data, callback) {
     <script type="text/javascript" src="./js/spoggy.js"></script>
     <script type="text/javascript" src="./js/solid.js"></script>-->
     <p>Name : ${this.name}</p>
+    <p>WebId : ${this.webId}</p>
+    <p>Username : ${this.username} <solid-login></solid-login></p>
+    ${friendsList(this.friends)}
     <p>${this.message}</p>
 
     <div>
@@ -244,30 +304,33 @@ saveEdgeData(data, callback) {
     </div>
 
     <div id="nodePopUp">
-      <span id="node-operation">node</span> <br>
-      <table style="margin:auto;">
-        <tr>
-          <td>id</td><td><input id="node-id" value="new value" /></td>
-        </tr>
-        <tr>
-          <td>label</td><td><input id="node-label" value="new value" /></td>
-        </tr>
-      </table>
-      <input type="button" value="save" id="node-saveButton" />
-      <input type="button" value="cancel" id="node-cancelButton" />
+    <span id="node-operation">node</span> <br>
+    <table style="margin:auto;">
+    <tr>
+    <td>id</td><td><input id="node-id" value="new value" /></td>
+    </tr>
+    <tr>
+    <td>label</td><td><input id="node-label" value="new value" /></td>
+    </tr>
+    </table>
+    <input type="button" value="save" id="node-saveButton" />
+    <input type="button" value="cancel" id="node-cancelButton" />
     </div>
 
     <div id="edge-popUp">
-      <span id="edge-operation">edge</span> <br>
-      <table style="margin:auto;">
-        <tr>
-          <td>label</td><td><input id="edge-label" value="new value" /></td>
-        </tr></table>
-      <input type="button" value="save" id="edge-saveButton" />
-      <input type="button" value="cancel" id="edge-cancelButton" />
+    <span id="edge-operation">edge</span> <br>
+    <table style="margin:auto;">
+    <tr>
+    <td>label</td><td><input id="edge-label" value="new value" /></td>
+    </tr></table>
+    <input type="button" value="save" id="edge-saveButton" />
+    <input type="button" value="cancel" id="edge-cancelButton" />
     </div>
 
-    <div id="mynetwork" bgcolor="#E6E6FA">  </div>
+    <div class="network" id="mynetwork" bgcolor="#E6E6FA">  </div>
+
+    <div class="network" id="browsernetwork" bgcolor="#E6E6FA">  </div>
+
     <br>
 
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
@@ -289,9 +352,13 @@ saveEdgeData(data, callback) {
   init(){
     // create a network
     var container = this.shadowRoot.getElementById('mynetwork');
-  //  this.spoggy.agent(this.agent)
+    //  this.spoggy.agent(this.agent)
     this.spoggy.network(container)
-console.log("SPOGGY PEUPLE", this.spoggy)
+
+    var browsercontainer = this.shadowRoot.getElementById('browsernetwork');
+    //  this.spoggy.agent(this.agent)
+    this.browser.network(browsercontainer)
+    console.log("SPOGGY PEUPLE", this.spoggy)
   }
 
 }
