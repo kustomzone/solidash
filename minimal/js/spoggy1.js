@@ -110,7 +110,7 @@ export class Spoggy {
         },
         editNode: function (data, callback) {
           // filling in the popup DOM elements
-          module.getElementById('node-operation').innerHTML = "Editer un noeud ";
+        //  module.getElementById('node-operation').innerHTML = "Editer un noeud ";
           module.editNode(data, module.cancelNodeEdit, callback);
         },
         addEdge: function (data, callback) {
@@ -183,14 +183,14 @@ export class Spoggy {
 
       // EVENTS on Network
       this.network.body.data.nodes.on("*", function(event, properties, senderId){
-        updateEditorFromNetwork(event, properties, senderId)
+      //  updateEditorFromNetwork(event, properties, senderId)
         console.log(event)
       }
     );
     this.network.body.data.edges.on("*", function(event, properties, senderId){
 
 
-      updateEditorFromNetwork(event, properties, senderId)
+      //updateEditorFromNetwork(event, properties, senderId)
       console.log(event)
     }
   );
@@ -273,7 +273,7 @@ top: ,
 left:
 });
 });*/
-
+/*
 this.network.on("selectEdge", function (params) {
   console.log('selectEdge Event:', params);
   if (params.nodes.length == 0){
@@ -291,10 +291,10 @@ this.network.on("selectEdge", function (params) {
       left: event.pageX + "px"
     });
   }
-});
+});*/
 
 
-
+/*
 this.network.on("selectNode", function (params) {
   console.log('selectNode Event:', params);
   //var n = network.getNodeAt(params.pointer.DOM);
@@ -327,8 +327,8 @@ this.network.on("selectNode", function (params) {
   });
 
 
-});
-
+});*/
+/*
 this.network.on("doubleClick", async function (params) {
   console.log('doubleClick ', params);
   var id = params.nodes[0];
@@ -365,6 +365,7 @@ this.network.on("doubleClick", async function (params) {
     console.log(err);
   }
 });
+*/
 }
 
 editNode(data, cancelAction, callback) {
@@ -392,6 +393,10 @@ this.agent.send("Spoggy", {action: "editNode", params:{data: data, cancelAction:
   $('#node-cancelButton').onclick = cancelAction.bind(this, callback);
   $('#node-popUp').style.display = 'block';
   $('#node-label').onkeyup = this.nodeNameChanged.bind(this, data, callback);*/
+}
+
+editEdgeWithoutDrag(data, callback){
+  this.agent.send("Spoggy", {action: "editEdgeWithoutDrag", params:{data: data, callback: callback} })
 }
 
 

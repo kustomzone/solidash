@@ -52,9 +52,10 @@ class SpoggyElement extends LitElement {
             // code block
             app.nodePopupOpen(message.params)
             break;
-          case "eatme":
-            // code block
-            break;
+            case "editEdgeWithoutDrag":
+              // code block
+              app.editEdgeWithoutDrag(message.params)
+              break;
           default:
             // code block
             console.log("action inconnue")
@@ -135,7 +136,9 @@ cancelNodeEdit(callback) {
 
 
 
-editEdgeWithoutDrag(data, callback) {
+editEdgeWithoutDrag(params) {
+  var data = params.data
+  var callback = params.callback
   // filling in the popup DOM elements
   this.shadowRoot.getElementById('edge-label').value = data.label || "";
   this.shadowRoot.getElementById('edge-saveButton').onclick = this.saveEdgeData.bind(this, data, callback);
