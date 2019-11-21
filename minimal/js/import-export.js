@@ -100,7 +100,8 @@ export function importer(params,callback){
       console.log("WEBID")
       params.rdfAgent.profile(params.source);
     }else{
-      params.fileAgent.readFolder(params.source,callbackAfterRead)
+      console.log("other")
+      params.fileAgent.readFolder(params.source,callback)
     }
 
   }
@@ -771,7 +772,7 @@ function detailNoeud(n,w){
     if(l == "me"){
       node.label =  node.title;
       node.shape = "image";
-      node.image = "./assets/profile.svg";
+      node.image = "../../assets/profile.svg";
       node.type = "webId";
     }
     break;
@@ -852,13 +853,13 @@ function folder2vis(sfolder){
   //  var files = sfolder.files|| "Files";
   var nodes = [];
   var edges = [];
-  nodes.push({id: url, label: name, type: "folder", cid:1, shape: "image", image: "./assets/folder.png" });
+  nodes.push({id: url, label: name, type: "folder", cid:1, shape: "image", image: "../../assets/folder.png" });
   //nodes.push({id:'folders', label:"Folder"});
   //edges.push({from:url, to: 'folders', arrows: 'to', label:"type"});
   //console.log("PAREnT", parent)
   if (parent != undefined){
     //  console.log("undef")
-    nodes.push({id: parent, label: parent, type: "folder", cid:1, shape: "image", image: "./assets/parentfolder.png" });
+    nodes.push({id: parent, label: parent, type: "folder", cid:1, shape: "image", image: "../../assets/parentfolder.png" });
     edges.push({from: url, to: parent, cid:1, arrows:'to', label: "parent"});
   }
   //  {id: "urlNode"+url, label: url},
@@ -874,7 +875,7 @@ function folder2vis(sfolder){
     sfolder.folders.forEach(function(fo){
       if(fo.name != ".."){
         app.folder2vis(fo)
-        var node = {id:fo.url, label:fo.name, type: 'folder',cid:1, shape: "image", image: "./assets/folder.png" }
+        var node = {id:fo.url, label:fo.name, type: 'folder',cid:1, shape: "image", image: "../../assets/folder.png" }
         //  console.log(node)
         nodes.push(node);
         edges.push({from:url, to: fo.url, cid:1, arrows: 'to', label:"folder"});
@@ -887,7 +888,7 @@ function folder2vis(sfolder){
     sfolder.files.forEach(function(fi){
       //  console.log(fi)
       //  app.file2vis(fi)
-      var node = {id:fi.url, label:fi.label, type: 'file' , cid:1, shape: "image", image: "./assets/document.png" };
+      var node = {id:fi.url, label:fi.label, type: 'file' , cid:1, shape: "image", image: "../../assets/document.png" };
       //  console.log(node)
       nodes.push(node);
       edges.push({from:url, to: fi.url, cid:1, arrows: 'to', label:"file"});

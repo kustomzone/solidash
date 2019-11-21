@@ -166,12 +166,12 @@ FileAgent.prototype.fetch = function(url, request) {
   }, err => { console.log(err); alert(err);} );;
 }
 
-/*function defaultCallBack(folder){
+function defaultCallBack(folder){
 console.log("Default callback after read")
 folder2vis(folder)
 updateCurrentFolder(folder)
 folder2browser(folder)
-}*/
+}
 
 /* FileAgent.prototype.saveOldUserData = function(profile)  {
 if (!localStorage.getItem('oldProfileData')) {

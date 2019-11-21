@@ -184,14 +184,14 @@ export class Spoggy {
       // EVENTS on Network
       this.network.body.data.nodes.on("*", function(event, properties, senderId){
       //  updateEditorFromNetwork(event, properties, senderId)
-        console.log(event)
+      //  console.log(event)
       }
     );
     this.network.body.data.edges.on("*", function(event, properties, senderId){
 
 
       //updateEditorFromNetwork(event, properties, senderId)
-      console.log(event)
+      //console.log(event)
     }
   );
 
@@ -402,7 +402,7 @@ editEdgeWithoutDrag(data, callback){
 
 
 updateGraph(message){
-  console.log("update graph"/*,message*/);
+  console.log("update graph",message);
   var app =this;
   if (message.params!= undefined && message.params.remplaceNetwork){
     this.network.body.data.nodes.clear();
@@ -410,6 +410,7 @@ updateGraph(message){
   }
   //this.network.body.data.nodes.update(message.data.nodes)
   //this.network.body.data.edges.update(message.data.edges)
+  console.log("this",app)
   this.addResultsToGraph(this.network, message.data)
   //  this.network.fit();
   //  this.network.redraw();

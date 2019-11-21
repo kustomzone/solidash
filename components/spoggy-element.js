@@ -69,7 +69,7 @@ class SpoggyElement extends LitElement {
           //  app.getUserData()
           app.logged = true
           app.getUserData(app.webId)
-          app.dataToVis(cont,app.webId)
+          //  app.dataToVis(cont,app.webId)
         }else{
           app.logged = false
           app.friends = [];
@@ -121,20 +121,56 @@ class SpoggyElement extends LitElement {
     //showFileInConsole('https://vincentt.inrupt.net/profile/card')
     Tripledoc.fetchDocument(app.webId).then(
       doc => {
-        //    console.log("DOC",doc)
-        //    console.log(doc.getStatements())
+        console.log("DOC",doc)
+        console.log(doc.getStatements())
         app.doc = doc;
+        /*  var data = statements2vis(doc.getStatements())
+        app.spoggy.updateGraph(data);*/
+
         app.person = doc.getSubject(app.webId);
+
         console.log("personne",app.person)
+        /*  var data = statements2vis(app.person.getStatements())
+        var message = {}
+        message.data = data
+        app.browser.updateGraph(message);*/
+
         app.username = app.person.getString(app.FOAF('name'))
         app.friends = app.person.getAllRefs(app.FOAF('knows'))
         console.log("Friends",app.friends)
-        //  app.initNotePod()
+        //app.getTypeIndex()
+        app.getStorage()
+
       },
       err => {
         console.log(err)
       }
     );
+  }
+
+  getStorage(){
+    var app  = this;
+    const storage = this.person.getRef(this.SPACE('storage'))
+    console.log("storage",storage)
+    app.publicStorage = storage + 'public/'
+  //  app.privateStorage = storage + 'private/'
+  app.browser.network.body.data.nodes.clear();
+  app.browser.network.body.data.edges.clear();
+    var cont = app.shadowRoot.getElementById("browsernetwork")
+    this.rdfAgent.fetchRemote(app.publicStorage)
+    //  this.fileAgent.readFolder(app.publicStorage)
+  //  app.dataToVis(cont, app.privateStorage, false)
+/*  var cont = app.shadowRoot.getElementById("browsernetwork")
+app.dataToVis(cont,app.publicStorage)*/
+
+
+  }
+
+  getTypeIndex(){
+
+    var app = this;
+    app.publicTypeIndexUrl = app.person.getRef(app.SOLID('publicTypeIndex'))
+    console.log("publicTypeIndexUrl",app.publicTypeIndexUrl)
   }
 
 
@@ -264,8 +300,8 @@ render() {
     <link href="../vendor/visjs/dist/vis-network.css" rel="stylesheet" type="text/css">
     <style type="text/css">
     .network {
-      width: 600px;
-      height: 400px;
+      width: 100%;
+      height: 800px;
       border: 1px solid lightgray;
     }
     #operation {
