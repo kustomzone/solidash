@@ -513,7 +513,7 @@ console.log("other stab")
 });
 }
 
-function updateGraph(message){
+export function updateGraph(message){
   console.log("update graph"/*,message*/);
   var app =this;
   if (message.params!= undefined && message.params.remplaceNetwork){

@@ -1,3 +1,5 @@
+import  { folder2vis } from '../../minimal/js/import-export.js';
+
 /**
 * Custom agent prototype
 * @param {String} id

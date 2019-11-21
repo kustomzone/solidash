@@ -1,5 +1,5 @@
 //##############################################################################
-
+import  { updateGraph } from './network.js';
 
 function handleFileSelected(evt, callback){
   //Parcourir pour importer
@@ -101,7 +101,7 @@ export function importer(params,callback){
       params.rdfAgent.profile(params.source);
     }else{
       console.log("other")
-      params.fileAgent.readFolder(params.source,callback)
+      params.fileAgent.readFolder(params.source,callbackAfterRead)
     }
 
   }
@@ -110,6 +110,14 @@ export function importer(params,callback){
 function isFile(pathname) {
   return pathname.split('/').pop().indexOf('.') > -1;
 }
+
+function callbackAfterRead(folder){
+  console.log("callback after read")
+  folder2vis(folder)
+  updateCurrentFolder(folder)
+  updateBrowser(folder)
+}
+
 
 function fetchJson(params, callback){
   let url = params.source;
@@ -841,7 +849,7 @@ return params;
 }
 
 
-function folder2vis(sfolder){
+export function folder2vis(sfolder){
   var app = this;
   //  this.clear()
   console.log('sfolder')
@@ -874,7 +882,7 @@ function folder2vis(sfolder){
   if (sfolder.folders && sfolder.folders.length >0){
     sfolder.folders.forEach(function(fo){
       if(fo.name != ".."){
-        app.folder2vis(fo)
+        folder2vis(fo)
         var node = {id:fo.url, label:fo.name, type: 'folder',cid:1, shape: "image", image: "../../assets/folder.png" }
         //  console.log(node)
         nodes.push(node);

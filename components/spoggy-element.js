@@ -158,7 +158,7 @@ class SpoggyElement extends LitElement {
   app.browser.network.body.data.edges.clear();
     var cont = app.shadowRoot.getElementById("browsernetwork")
     this.rdfAgent.fetchRemote(app.publicStorage)
-    //  this.fileAgent.readFolder(app.publicStorage)
+  //    this.fileAgent.readFolder(app.publicStorage)
   //  app.dataToVis(cont, app.privateStorage, false)
 /*  var cont = app.shadowRoot.getElementById("browsernetwork")
 app.dataToVis(cont,app.publicStorage)*/
