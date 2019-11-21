@@ -1,5 +1,5 @@
 
-
+import { HelloAgent } from '../../js/agents/HelloAgent.js';
 
 export class Spoggy {
   constructor() {
@@ -15,12 +15,39 @@ export class Spoggy {
     this.springConstantValueDefault = 0.05;//0.04, // 0.05
     this.nodeDistanceValueDefault = 200;//100;//170, //120
     this.dampingValueDefault = 0.09;//0.08 // 0,08;
+
+    this.agent_init()
   }
+
+  agent_init(){
+
+    this.agent = new HelloAgent(this.name);
+    console.log("MODULE AGENT",this.agent)
+    //this.agent = new HelloAgent(this.name);
+    this.agent.receive = function(from, message) {
+      console.log(this.id+" RECEIVE IN MODULE "+JSON.stringify(message))
+      if (message.hasOwnProperty("webId")){
+        this.webId = message.webId
+
+        console.log(this.id+" receive webId "+this.webId)
+        if (this.webId != null){
+          //  app.getUserData()
+          this.logged = true
+        }else{
+          this.logged = false
+          //  app.notes = []
+        }
+      }
+    };
+  }
+
   parle() {
     console.log("Classe Spoggy")
     console.log(`${this.name} aboie.`);
+    this.agent.send('Messages', 'Parle depuis module!');
   }
   network(container){
+    var module = this;
     // randomly create some nodes and edges
     var nodes = new vis.DataSet([
       {id: "Spoggy", label: 'Spoggy'},
@@ -77,13 +104,14 @@ export class Spoggy {
         addNode: function (data, callback) {
           // filling in the popup DOM elements
           //  document.getElementById('node-operation').innerHTML = "Ajouter un noeud ";
+          module.agent.send('Messages', 'Add node!');
           data.label="";
-          //  editNode(data, clearNodePopUp, callback);
+          module.editNode(data, module.clearNodePopUp, callback);
         },
         editNode: function (data, callback) {
           // filling in the popup DOM elements
-          //  document.getElementById('node-operation').innerHTML = "Editer un noeud ";
-          //  editNode(data, cancelNodeEdit, callback);
+          module.getElementById('node-operation').innerHTML = "Editer un noeud ";
+          module.editNode(data, module.cancelNodeEdit, callback);
         },
         addEdge: function (data, callback) {
           if (data.from == data.to) {
@@ -93,13 +121,13 @@ export class Spoggy {
               return;
             }
           }
-          //document.getElementById('edge-operation').innerHTML = "Ajouter un lien";
-          //editEdgeWithoutDrag(data, callback);
+          //  document.getElementById('edge-operation').innerHTML = "Ajouter un lien";
+          module.editEdgeWithoutDrag(data, callback);
         },
         editEdge: {
           editWithoutDrag: function(data, callback) {
-            //document.getElementById('edge-operation').innerHTML = "Editer un lien";
-            //editEdgeWithoutDrag(data,callback);
+            //  document.getElementById('edge-operation').innerHTML = "Editer un lien";
+            module.editEdgeWithoutDrag(data,callback);
           }
         }
       }
@@ -155,16 +183,245 @@ export class Spoggy {
 
       // EVENTS on Network
       this.network.body.data.nodes.on("*", function(event, properties, senderId){
-        //updateEditorFromNetwork(event, properties, senderId)
+        updateEditorFromNetwork(event, properties, senderId)
         console.log(event)
       }
     );
     this.network.body.data.edges.on("*", function(event, properties, senderId){
-      //  updateEditorFromNetwork(event, properties, senderId)
+
+
+      updateEditorFromNetwork(event, properties, senderId)
       console.log(event)
     }
   );
 
+  this.network.on("click", function (e) {
+    console.log(e)
+    // If the clicked element is not the menu
+    if (!$(e.target).parents(".custom-menu").length > 0) {
+      var elems = e.nodes.length+e.edges.length;
+      console.log(elems)
+      if (!elems > 0){
+        $(".custom-menu").hide(100);
+        console.log(" NON noeud ou edge > 0")
+      }
+      else{
+        console.log("noeud ou edge > 0")
+      }
+      // Hide it
+
+    }
+  });
+
+
+
+  // If the menu element is clicked
+  $(".custom-menu li").click(function(){
+
+    // This is the triggered action name
+    switch($(this).attr("data-action")) {
+
+      // A case for each action. Your actions here
+      case "edit":
+      //  var n = network.getNodeAt(params.pointer.DOM);
+      //  console.log(n)
+      console.log("edit :",network.current);
+      network.editNode(network.current);
+      break;
+      case "expand":
+      console.log("expand");
+      var params = {}
+      params.source = network.current.id;
+      importer(params,updateGraph)
+      fitAndFocus(network.current.id)
+      if(params.source.endsWith("#me")){
+        updateCurrentWebId(params.source)
+      }
+      break;
+      case "third":
+      alert("third");
+      break;
+    }
+
+    // Hide it AFTER the action was triggered
+    $(".custom-menu").hide(100);
+  });
+
+  /*
+  network.on("oncontext", function (params) {
+  console.log(params)
+  event.preventDefault();
+
+  // Show contextmenu
+  $(".custom-menu").finish().toggle(100).
+
+  // In the right position (the mouse)
+  css({
+  top: event.pageY + "px",
+  left: event.pageX + "px"
+});
+params.event.preventDefault();
+var n = network.getNodeAt(params.pointer.DOM);
+console.log(n)
+var m = document.getElementById("popup-menu");
+m.style.position.top = params.pointer.DOM.y;
+m.style.position.left =  params.pointer.DOM.x;
+m.style.display = "block";
+$(".custom-menu").finish().toggle(100);
+$(".custom-menu").css({
+top: ,
+left:
+});
+});*/
+
+this.network.on("selectEdge", function (params) {
+  console.log('selectEdge Event:', params);
+  if (params.nodes.length == 0){
+    // sinon on a selectionné un noeud
+    event.preventDefault();
+    var networkTopOffset = document.getElementById("mynetwork").offsetTop
+    var ord = event.pageY-networkTopOffset;
+    console.log("ORD",ord)
+    // Show contextmenu
+    $(".custom-menu").finish().toggle(100).
+
+    // In the right position (the mouse)
+    css({
+      top: ord + "px",
+      left: event.pageX + "px"
+    });
+  }
+});
+
+
+
+this.network.on("selectNode", function (params) {
+  console.log('selectNode Event:', params);
+  //var n = network.getNodeAt(params.pointer.DOM);
+  //console.log(n)
+  if (params.nodes.length == 1) {
+    if (module.network.isCluster(params.nodes[0]) == true) {
+      module.network.openCluster(params.nodes[0]);
+    }else{
+      let id = params.nodes[0];
+      var node = module.network.body.data.nodes.get(id);
+      console.log(node);
+      module.network.current = node;
+      node.label.indexOf(' ') >= 0 ? document.getElementById("input").value = '"'+node.label+'" ' : document.getElementById("input").value = node.label+' ';
+    }
+
+  }
+
+
+  event.preventDefault();
+  var networkTopOffset = document.getElementById("mynetwork").offsetTop
+  var ord = event.pageY-networkTopOffset;
+  console.log("ORD",ord)
+  // Show contextmenu
+  $(".custom-menu").finish().toggle(100).
+
+  // In the right position (the mouse)
+  css({
+    top: ord + "px",
+    left: event.pageX + "px"
+  });
+
+
+});
+
+this.network.on("doubleClick", async function (params) {
+  console.log('doubleClick ', params);
+  var id = params.nodes[0];
+  var existNode;
+  try{
+    existNode = module.network.body.data.nodes.get({
+      filter: function(node){
+        return (node.id == id );
+      }
+    });
+    console.log(existNode);
+    if (existNode.length != 0){
+      console.log("existe", existNode[0])
+      var params = existNode[0];
+      params.source = existNode[0].id;
+      importer(params,updateGraph)
+      fitAndFocus(existNode[0].id)
+      if(params.source.endsWith("#me")){
+        updateCurrentWebId(params.source)
+      }
+      //app.nodeChanged(existNode[0]);
+      //  app.agentVis.send('agentFileeditor', {type: "nodeChanged", node: existNode[0]});
+      //  app.agentVis.send('agentFoldermenu', {type: "nodeChanged", node: existNode[0]});
+      //  network.body.data.nodes.add(data);
+      //  var thing = this.thing;
+    }else{
+      console.log("n'existe pas")
+      //  delete data.x;
+      //  delete data.y
+      //  network.body.data.nodes.update(data);
+    }
+  }
+  catch (err){
+    console.log(err);
+  }
+});
 }
+
+editNode(data, cancelAction, callback) {
+  // recup colorpickers
+  /*var colpicbody = this.shadowRoot.getElementById('bodycolorpicker').cloneNode(true);
+  colpicbody.id="colpicbody";
+  var colpicborder = this.shadowRoot.getElementById('bordercolorpicker').cloneNode(true);
+  colpicborder.id="colpicborder"
+  this.shadowRoot.getElementById('node-operation').appendChild(colpicbody)
+  this.shadowRoot.getElementById('node-operation').appendChild(colpicborder)
+  data.color && data.color.background? document.getElementById('colpicbody').value = data.color.background : "";
+  data.color && data.color.border? document.getElementById('colpicborder').value = data.color.border : "";*/
+  var module = this;
+/*  var allAgents = Object.keys(this.agent.connections[0].transport.agents);
+  console.log(allAgents)
+  allAgents.forEach(function (agent){
+    module.agent.send(agent, "BROADCAST OUVRE NODE POPUP");
+  })*/
+this.agent.send("Spoggy", {action: "editNode", params:{data: data, cancelAction: cancelAction, callback: callback} })
+/*
+  $('#node-id').value = data.id || "";
+  $('#node-label').value = data.label;
+  $('#node-shape').value = data.shape || "ellipse";
+  $('#node-saveButton').onclick = this.saveNodeData.bind(this, data, callback);
+  $('#node-cancelButton').onclick = cancelAction.bind(this, callback);
+  $('#node-popUp').style.display = 'block';
+  $('#node-label').onkeyup = this.nodeNameChanged.bind(this, data, callback);*/
+}
+
+
+fitAndFocus(node_id){
+  console.log("Fonctionnement erratique de fitAndFocus, suspendu pour l'instant")
+  var network = this.network;
+  var oneStab = true;
+  this.network.on("stabilized", function(params){
+    //http://visjs.org/docs/network/index.html?keywords=fit
+    console.log(params)
+    /*  if (oneStab){
+    oneStab = false;
+    autofit.checked? network.fit(): "";
+    var options = {
+    scale: 1,
+    offset: {x:1, y:1},
+    //  locked: true,
+    animation: { // -------------------> can be a boolean too!
+    duration: 1000,
+    easingFunction: "easeInOutQuad"
+  }
+};
+autofocus.checked? network.focus(node_id, options): "";
+
+}else{
+console.log("other stab")
+}*/
+});
+}
+
+
 
 }
