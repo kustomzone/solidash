@@ -42,6 +42,7 @@
     "popper.js": "^1.16.0",
     "rdf-namespaces": "^1.6.0",
     "rdflib": "^1.0.6",
+    "solid-file-client": "^0.5.2",
     "tripledoc": "^2.4.0",
     "vis-network": "^6.4.4"
   },

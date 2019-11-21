@@ -400,6 +400,82 @@ editEdgeWithoutDrag(data, callback){
 }
 
 
+
+updateGraph(message){
+  console.log("update graph"/*,message*/);
+  var app =this;
+  if (message.params!= undefined && message.params.remplaceNetwork){
+    this.network.body.data.nodes.clear();
+    this.network.body.data.edges.clear();
+  }
+  //this.network.body.data.nodes.update(message.data.nodes)
+  //this.network.body.data.edges.update(message.data.edges)
+  this.addResultsToGraph(this.network, message.data)
+  //  this.network.fit();
+  //  this.network.redraw();
+  //  console.log("add results to graph"/*,this.network*/)
+}
+
+addResultsToGraph(network, results){
+  var app = this;
+  var nodes = results.nodes;
+  var edges = results.edges;
+  //DESACTIVATION STABIL POUR PLUS DE FLUIDITE
+  var options = {
+    physics:{
+      stabilization: false
+    },
+    edges: {
+      smooth: {
+        type: "continuous",
+        forceDirection: "none"
+      }
+    }
+  }
+  app.network.setOptions(options);
+
+  nodes.forEach(function(n){
+    app.addNodeIfNotExist(app.network, n);
+  });
+  app.network.body.data.edges.update(edges)
+  //REACTIVATION STABIL POUR PLUS DE FLUIDITE
+  options = {
+    physics:{
+      stabilization: true
+    }
+  }
+  app.network.setOptions(options);
+  //app.network.redraw();
+}
+
+addNodeIfNotExist(network, data){
+  var existNode = false;
+  //console.log(data);
+  var nodeId;
+  try{
+    existNode = network.body.data.nodes.get({
+      filter: function(n){
+        return (n.id == data.id || (n.label == data.label)); //  || n.title == data.label
+      }
+    });
+    //console.log(existNode);
+    if (existNode.length == 0){
+      //  console.log("n'existe pas")
+      nodeId =   network.body.data.nodes.add(data)[0];
+    }else{
+      //  console.log("existe")
+      delete data.x;
+      delete data.y
+      nodeId =  network.body.data.nodes.update(data)[0];
+    }
+  }
+  catch (err){
+    console.log(err);
+  }
+}
+
+
+
 fitAndFocus(node_id){
   console.log("Fonctionnement erratique de fitAndFocus, suspendu pour l'instant")
   var network = this.network;

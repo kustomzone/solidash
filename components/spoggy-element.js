@@ -1,14 +1,21 @@
 // Import the LitElement base class and html helper function
 import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
+import '../vendor/solid-file-client/solid-file-client.bundle.js';
 import { HelloAgent } from '../js/agents/HelloAgent.js';
+import { RdfAgent } from '../js/agents/RdfAgent.js';
+import { FileAgent } from '../js/agents/FileAgent.js';
 //import  *  as vis from "../vendor/visjs/vis.js"; //import "../vendor/visjs/vis-network.min.js";
 
 import  { catchCommande } from "../minimal/js/spoggy.js";
 import   "../minimal/js/solid.js";
 import  './solid-login.js';
+import  { importer , statements2vis } from '../minimal/js/import-export.js';
 
 //new
 import { Spoggy } from "../minimal/js/spoggy1.js";
+
+
+
 
 
 // Extend the LitElement base class
@@ -46,7 +53,11 @@ class SpoggyElement extends LitElement {
 
   firstUpdated(changedProperties) {
     var app = this;
+    this.rdfAgent = new RdfAgent('rdfAgent');
+    this.fileAgent = new FileAgent('fileAgent');
+
     this.agent = new HelloAgent(this.name);
+
     this.agent.receive = function(from, message) {
       console.log(this.id+" RECEIVE "+JSON.stringify(message))
       if (message.hasOwnProperty("webId")){
@@ -58,7 +69,7 @@ class SpoggyElement extends LitElement {
           //  app.getUserData()
           app.logged = true
           app.getUserData(app.webId)
-          app.updateGraph(cont,app.webId)
+          app.dataToVis(cont,app.webId)
         }else{
           app.logged = false
           app.friends = [];
@@ -75,6 +86,10 @@ class SpoggyElement extends LitElement {
           // code block
           app.editEdgeWithoutDrag(message.params)
           break;
+          case "updateGraph":
+          // code block
+          app.browser.updateGraph(message.params)
+          break;
           default:
           // code block
           console.log("action inconnue")
@@ -85,9 +100,19 @@ class SpoggyElement extends LitElement {
   }
 
 
-  updateGraph(container,data,replace=true){
+  dataToVis(container,data,replace=true){
+    var app = this;
     console.log(container);
     console.log(typeof data, data)
+    if (typeof data == "string"){
+      var params={source : data };
+      params.rdfAgent = app.rdfAgent;
+      params.fileAgent = app.fileAgent;
+      console.log(params)
+      importer(params,app.spoggy.updateGraph);
+    }
+
+
   }
 
   getUserData(){
@@ -111,6 +136,7 @@ class SpoggyElement extends LitElement {
       }
     );
   }
+
 
   editNode(params){
     console.log("open",params)

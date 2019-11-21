@@ -1,4 +1,6 @@
 //##############################################################################
+
+
 function handleFileSelected(evt, callback){
   //Parcourir pour importer
   console.log(evt," https://www.html5rocks.com/en/tutorials/file/dndfiles/")
@@ -62,7 +64,7 @@ function handleFileSelected(evt, callback){
   }
 }
 
-function importer(params,callback){
+export function importer(params,callback){
   var url = params.source;
   if(isFile(url)){
     var extension = url.split('.').pop();
@@ -96,12 +98,16 @@ function importer(params,callback){
     console.log("FOLDER ou WEBID")
     if (params.source.endsWith("card#me")){
       console.log("WEBID")
-      rdfAgent.profile(params.source);
+      params.rdfAgent.profile(params.source);
     }else{
-      fileAgent.readFolder(params.source,callbackAfterRead)
+      params.fileAgent.readFolder(params.source,callbackAfterRead)
     }
 
   }
+}
+
+function isFile(pathname) {
+  return pathname.split('/').pop().indexOf('.') > -1;
 }
 
 function fetchJson(params, callback){
@@ -660,7 +666,7 @@ console.log("parsé")
 
 }
 
-function statements2vis(statements){
+export function statements2vis(statements){
   console.log("statements2vis")
   var app = this;
   var data = {nodes:[], edges:[]};
@@ -703,7 +709,7 @@ function statements2vis(statements){
 
 
 
-      data.edges.push({from:s.value, to: o.value, arrows: 'to', label: app.localname(p), uri: p.value});
+      data.edges.push({from:s.value, to: o.value, arrows: 'to', label: localname(p), uri: p.value});
       //  app.addEdgeIfNotExist(app.network,{from:s.subject.value, to: s.object.value, arrows: 'to', label:s.predicate.value});
 
       //app.network.body.data.edges.update(edges)
