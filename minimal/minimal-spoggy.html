@@ -31,6 +31,7 @@
   <script type="module" src="../components/spoggy-element.js"></script>
   <script type="module" src="../components/browser-element.js"></script>
   <script type="module" src="../components/editor-element.js"></script>
+  <script type="module" src="../components/profile-element.js"></script>
 
 
 
@@ -40,27 +41,37 @@
 
   <table>
     <tr>
+      <td></td>
       <td>
-        <browser-element
-        name="Browser"
-        message="my message"
-        other = "other attribute">
-        Browser Loading ...
-      </browser-element>
+        <profile-element
+        name="Profile">
+        Profile Loading ...
+      </profile-element>
     </td>
+    <td></td>
+  </tr>
+  <tr>
     <td>
-      <spoggy-element
-      name="Spoggy"
+      <browser-element
+      name="Browser"
       message="my message"
       other = "other attribute">
-      Spoggy Loading ...
-    </spoggy-element>
+      Browser Loading ...
+    </browser-element>
   </td>
   <td>
-    <editor-element
-    name="Editor">
-    Editor Loading ...
-  </editor-element>
+    <spoggy-element
+    name="Spoggy"
+    message="my message"
+    other = "other attribute">
+    Spoggy Loading ...
+  </spoggy-element>
+</td>
+<td>
+  <editor-element
+  name="Editor">
+  Editor Loading ...
+</editor-element>
 </td>
 </tr>
 </table>
