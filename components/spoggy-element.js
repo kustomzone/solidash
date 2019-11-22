@@ -302,7 +302,7 @@ render() {
     <link href="../vendor/visjs/dist/vis-network.css" rel="stylesheet" type="text/css">
     <style type="text/css">
     .network {
-      width: 400px;
+      width: 800px;
       height: 400px;
       /*  width: 100%;
       height: 800px;*/

@@ -708,7 +708,7 @@ export function statements2vis(statements){
       break;
       default:
       //console.log("NON LABEL ",p.value);
-      console.log("###\n",s.value,"\n",p.value,"\n",o.value)
+  //    console.log("###\n",s.value,"\n",p.value,"\n",o.value)
       var edges = [];
       var nodeSujetTemp = detailNoeud(s,w);
       var nodeObjetTemp = detailNoeud(o,w);
@@ -732,7 +732,7 @@ export function statements2vis(statements){
 
 function detailNoeud(n,w){
   var node = {}
-  console.log(n)
+  //console.log(n)
   switch (n.termType) {
 
     case 'BlankNode':
@@ -796,7 +796,7 @@ function detailNoeud(n,w){
     };
 
   }
-  console.log(node)
+  //console.log(node)
   //
   return node;
 }
