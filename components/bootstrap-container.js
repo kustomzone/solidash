@@ -4,7 +4,14 @@ import { HelloAgent } from '../js/agents/HelloAgent.js';
 import {BsButton} from 'https://unpkg.com/@lit-element-bootstrap/button';
 import {BsCarousel} from 'https://unpkg.com/@lit-element-bootstrap/carousel';
 import  {BsContainer, BsRow, BsColumn} from 'https://unpkg.com/@lit-element-bootstrap/layout';
-import  {BsModal} from 'https://unpkg.com/@lit-element-bootstrap/modal';
+
+import "../components/minimal-element.js";
+import "../components/pad-element.js";
+import "../js/helpers/messages-element.js";
+import "../components/spoggy-element.js";
+import "../components/browser-element.js";
+import "../components/editor-element.js";
+import "../components/profile-element.js";
 
 
 // Extend the LitElement base class
@@ -33,93 +40,102 @@ class BootstrapContainer extends LitElement {
 
   render() {
     return html`
-    <p>Name : ${this.name}</p>
-    <p>Count: ${this.count}</p>
-    <p>${this.message}</p>
 
-cont
-<bs-container fluid>
-    <div class="header">Header</div>
-    <div class="sidebar">Siderbar</div>
-    <div class="body">
+    <bs-container>
     <bs-row>
-        <bs-column sm demo primary>One of three columns</bs-column>
-        <bs-column sm demo success>One of three columns</bs-column>
-        <bs-column sm demo>One of three columns</bs-column>
+
+    <bs-column xs demo>
+    <browser-element
+    name="Browser"
+    message="my message"
+    other = "other attribute">
+    Browser Loading ...
+    </browser-element>
+    </bs-column>
+
+
+    <bs-column xs demo>
+    <spoggy-element
+    name="Spoggy">
+    Spoggy Loading ...
+    </spoggy-element>
+    </bs-column>
+
+
+    <bs-column xs demo>
+    <bs-row>
+
+    <profile-element
+    name="Profile">
+    Profile Loading ...
+    </profile-element>
+
+    <editor-element
+    name="Editor">
+    Editor Loading ...
+    </editor-element>
     </bs-row>
-    </div>
-
-</bs-container>
-cont
-<bs-container>
-<bs-row>
-      <bs-column xs demo>col</bs-column>
-      <bs-column xs demo>col</bs-column>
-      <bs-column xs demo>col</bs-column>
-      <bs-column xs demo>col</bs-column>
-  </bs-row>
-  <bs-row>
-      <bs-column xs-8 demo>col-8</bs-column>
-      <bs-column xs-4 demo>
-
-      <bs-modal opened>
-          <bs-modal-header slot="header">
-              <h5>Modal title</h5>
-          </bs-modal-header>
-          <bs-modal-body slot="body">
-              <p>Modal body text goes here.</p>
-          </bs-modal-body>
-          <bs-modal-footer slot="footer">
-              <bs-button secondary>Close</bs-button>
-              <bs-button primary>Save changes</bs-button>
-          </bs-modal-footer>
-      </bs-modal>
-      <bs-button primary id="modalLauncher">Launch demo modal</bs-button primary>
-
-      <bs-modal backdrop animated dismissable>
-          <bs-modal-header slot="header">
-              <h5>Modal title</h5>
-          </bs-modal-header>
-          <bs-modal-body slot="body">
-              <p>Woohoo, you're reading this text in a modal!</p>
-          </bs-modal-body>
-          <bs-modal-footer slot="footer">
-              <bs-button secondary id="closeModal">Close</bs-button>
-              <bs-button primary id="saveChanges">Save changes</bs-button>
-          </bs-modal-footer>
-      </bs-modal>
-
-      </bs-column>
-  </bs-row>
-
-</bs-container>
-cont
+    </bs-column>
 
 
-<hr>
 
-        <bs-carousel>
-        <bs-carousel-item active>
-            <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: First slide"><title>Placeholder</title><rect width="100%" height="100%" fill="#777"></rect><text x="50%" y="50%" fill="#555" dy=".3em">First slide</text></svg>
-        </bs-carousel-item>
-        <bs-carousel-item>
-            <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Second slide"><title>Placeholder</title><rect width="100%" height="100%" fill="#666"></rect><text x="50%" y="50%" fill="#444" dy=".3em">Second slide</text></svg>
-        </bs-carousel-item>
-        <bs-carousel-item>
-            <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Third slide"><title>Placeholder</title><rect width="100%" height="100%" fill="#555"></rect><text x="50%" y="50%" fill="#333" dy=".3em">Third slide</text></svg>
-        </bs-carousel-item>
-        <bs-carousel-item>
-        <bs-button primary>Primary</bs-button>
-        <bs-button secondary>Secondary</bs-button>
-        <bs-button success>Success</bs-button>
-        <bs-button danger>Danger</bs-button>
-        <bs-button warning>Warning</bs-button>
-        <bs-button info>Info</bs-button>
-        <bs-button light>Light</bs-button>
-        <bs-button dark>Dark</bs-button>
-        <bs-button link>Link</bs-button>    </bs-carousel-item>
-        <bs-carousel-control-prev slot="control-prev"></bs-carousel-control-prev>
-      <bs-carousel-control-next slot="control-next"></bs-carousel-control-next>
+    </bs-row>
+
+    <bs-row>
+    <bs-column xs-8 demo>
+    <messages-element
+    name="Messages"
+    message="one message"
+    other = "other attribute">
+    Messages Loading ...
+    </messages-element>
+    </bs-column>
+
+    <bs-column xs-4 demo>
+    <pad-element
+    name="Pad"
+    message="my message"
+    other = "other attribute">
+    Pad Loading ...
+    </pad-element>
+    </bs-column>
+
+    </bs-row>
+
+    </bs-container>
+
+
+
+
+
+
+
+    <bs-carousel data-interval="false">
+
+    <bs-carousel-item active>
+    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Second slide"><title>Placeholder</title><rect width="100%" height="100%" fill="#666"></rect><text x="50%" y="50%" fill="#444" dy=".3em">Second slide</text></svg>
+
+    </bs-carousel-item>
+    <bs-carousel-item>
+    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Second slide"><title>Placeholder</title><rect width="100%" height="100%" fill="#666"></rect><text x="50%" y="50%" fill="#444" dy=".3em">Second slide</text></svg>
+    </bs-carousel-item>
+    <bs-carousel-item>
+    <svg class="bd-placeholder-img bd-placeholder-img-lg d-block w-100" width="800" height="400" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Third slide"><title>Placeholder</title><rect width="100%" height="100%" fill="#555"></rect><text x="50%" y="50%" fill="#333" dy=".3em">Third slide</text></svg>
+    </bs-carousel-item>
+    <bs-carousel-item>
+    <bs-button primary>Primary</bs-button>
+    <bs-button secondary>Secondary</bs-button>
+    <bs-button success>Success</bs-button>
+    <bs-button danger>Danger</bs-button>
+    <bs-button warning>Warning</bs-button>
+    <bs-button info>Info</bs-button>
+    <bs-button light>Light</bs-button>
+    <bs-button dark>Dark</bs-button>
+    <bs-button link>Link</bs-button>
+    </bs-carousel-item>
+
+    <bs-carousel-control-prev slot="control-prev"></bs-carousel-control-prev>
+    <bs-carousel-control-next slot="control-next"></bs-carousel-control-next>
     </bs-carousel>
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
     https://lit-element-bootstrap.dev/<br>
