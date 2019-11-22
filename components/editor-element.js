@@ -49,6 +49,15 @@ class EditorElement extends LitElement {
       }
     };
 
+    //https://ace.c9.io/#nav=api&api=editor
+    app.editor = ace.edit(this.shadowRoot.getElementById("editor"), {
+      theme: "ace/theme/tomorrow_night_eighties",
+      mode: "ace/mode/turtle",
+      maxLines: 30,
+      wrap: true,
+      autoScrollEditorIntoView: true
+    });
+
   }
 
   updateFromPath(data){
@@ -65,6 +74,8 @@ class EditorElement extends LitElement {
         file.type = app.type;
         file.content = app.content;
         app.agent.send('Spoggy', {action:"updateFromFile", file:file});
+        app.editor.session.setValue(content.trim())
+        app.editor.format = "ttl"
         //  app.updateBrowser(app.folder)
       },err =>{alert(err)})
     }catch(e){
@@ -98,13 +109,41 @@ class EditorElement extends LitElement {
     `
     :html`<p>Render some other than HTML  or Png</p>
 
+    <div>
     <pre class="pre-scrollable"> ${this.content}</pre>
+
+    <pre class="pre-scrollable" id="editor"></pre>
+    </div>
+    <!--  </div>-->
+    <div>
+    <button
+    type="button"
+    class="mdc-button mdc-dialog__button"
+
+    onclick="downloadFile()">
+    <span class="mdc-button__label">Telecharger</span>
+    </button>
+
+    <button
+    type="button"
+    class="mdc-button mdc-dialog__button"
+
+    onclick="openPodBrowser()">
+    <span class="mdc-button__label">Enregistrer sur un POD</span>
+    </button>
+    </div>
+
+
 
     `}
 
 
     </p>
-    <p id="editor"></p>
+
+
+
+
+
     </fieldset>
     `;
   }

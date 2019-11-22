@@ -53,7 +53,7 @@ class SpoggyElement extends LitElement {
     this.agent = new HelloAgent(this.name);
 
     this.agent.receive = function(from, message) {
-    //  console.log(this.id+" RECEIVE "+JSON.stringify(message))
+      //  console.log(this.id+" RECEIVE "+JSON.stringify(message))
       if (message.hasOwnProperty("webId")){
         app.webId = message.webId
         var cont = app.shadowRoot.getElementById("browsernetwork")
@@ -89,6 +89,9 @@ class SpoggyElement extends LitElement {
           break;
           case "updateFromFile":
           app.updateFromFile(message.file)
+          break;
+          case "updateEditorFromNetwork":
+          app.updateEditorFromNetwork(message.data)
           break;
           default:
           // code block
@@ -126,7 +129,7 @@ class SpoggyElement extends LitElement {
       /*  $rdf.parse(result, store,base, mimeType)
       console.log("STORE",store)*/
       var data = statements2vis(store.statements);
-          app.spoggy.updateGraph({data:data})
+      app.spoggy.updateGraph({data:data})
       break;
       default:
       console.log("Ce type de fichier ("+file.type+") n'est pas encore traité")
@@ -412,7 +415,7 @@ render() {
   <legend>Outils</legend>
   <button
   id="nouveau_graph"
-  @click=${this.attrappeCommande}
+  @click=${this.nouveau}
 
   >Nouveau</button> /n
   <!--  <button id="importer_btn" onclick="catchCommande({value:'/i'})">Ouvrir</button> /i-->
@@ -459,6 +462,30 @@ clickHandler(event) {
   console.log(this.agent)
   this.agent.send('Messages', 'Click from SpoggyElement!');
 }
+nouveau(){
+  this.spoggy.network.body.data.nodes.clear();
+  this.spoggy.network.body.data.edges.clear();
+}
+
+updateEditorFromNetwork(event, properties, senderId){
+//var event = data.event;
+
+ var data = {
+   nodes: app.spoggy.network.body.data.nodes.get({
+     filter: function (n) {
+       return (n.cid != 1);
+     }
+   }),
+   edges: app.spoggy.network.body.data.edges.get({
+     filter: function (e) {
+       return (e.cid != 1);
+     }
+   }) };
+   var text = JSON.stringify(data, null, 2)
+   editor.session.setValue(text)
+   editor.format  = "json";
+ //  document.getElementById('editeur-popUp').style.display = 'block';
+ }
 
 attrappeCommande(){
   catchCommande({value:'/c'})

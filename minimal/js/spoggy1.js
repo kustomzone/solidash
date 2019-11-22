@@ -110,7 +110,7 @@ export class Spoggy {
         },
         editNode: function (data, callback) {
           // filling in the popup DOM elements
-        //  module.getElementById('node-operation').innerHTML = "Editer un noeud ";
+          //  module.getElementById('node-operation').innerHTML = "Editer un noeud ";
           module.editNode(data, module.cancelNodeEdit, callback);
         },
         addEdge: function (data, callback) {
@@ -182,16 +182,17 @@ export class Spoggy {
       this.network = new vis.Network(container, data, options);
 
       // EVENTS on Network
+
       this.network.body.data.nodes.on("*", function(event, properties, senderId){
-      //  updateEditorFromNetwork(event, properties, senderId)
-      //  console.log(event)
+        module.updateEditorFromNetwork(event, properties, senderId)
+        console.log(event)
       }
     );
     this.network.body.data.edges.on("*", function(event, properties, senderId){
 
 
-      //updateEditorFromNetwork(event, properties, senderId)
-      //console.log(event)
+      module.updateEditorFromNetwork(event, properties, senderId)
+      console.log(event)
     }
   );
 
@@ -275,95 +276,95 @@ left:
 });*/
 /*
 this.network.on("selectEdge", function (params) {
-  console.log('selectEdge Event:', params);
-  if (params.nodes.length == 0){
-    // sinon on a selectionné un noeud
-    event.preventDefault();
-    var networkTopOffset = document.getElementById("mynetwork").offsetTop
-    var ord = event.pageY-networkTopOffset;
-    console.log("ORD",ord)
-    // Show contextmenu
-    $(".custom-menu").finish().toggle(100).
+console.log('selectEdge Event:', params);
+if (params.nodes.length == 0){
+// sinon on a selectionné un noeud
+event.preventDefault();
+var networkTopOffset = document.getElementById("mynetwork").offsetTop
+var ord = event.pageY-networkTopOffset;
+console.log("ORD",ord)
+// Show contextmenu
+$(".custom-menu").finish().toggle(100).
 
-    // In the right position (the mouse)
-    css({
-      top: ord + "px",
-      left: event.pageX + "px"
-    });
-  }
+// In the right position (the mouse)
+css({
+top: ord + "px",
+left: event.pageX + "px"
+});
+}
 });*/
 
 
 /*
 this.network.on("selectNode", function (params) {
-  console.log('selectNode Event:', params);
-  //var n = network.getNodeAt(params.pointer.DOM);
-  //console.log(n)
-  if (params.nodes.length == 1) {
-    if (module.network.isCluster(params.nodes[0]) == true) {
-      module.network.openCluster(params.nodes[0]);
-    }else{
-      let id = params.nodes[0];
-      var node = module.network.body.data.nodes.get(id);
-      console.log(node);
-      module.network.current = node;
-      node.label.indexOf(' ') >= 0 ? document.getElementById("input").value = '"'+node.label+'" ' : document.getElementById("input").value = node.label+' ';
-    }
+console.log('selectNode Event:', params);
+//var n = network.getNodeAt(params.pointer.DOM);
+//console.log(n)
+if (params.nodes.length == 1) {
+if (module.network.isCluster(params.nodes[0]) == true) {
+module.network.openCluster(params.nodes[0]);
+}else{
+let id = params.nodes[0];
+var node = module.network.body.data.nodes.get(id);
+console.log(node);
+module.network.current = node;
+node.label.indexOf(' ') >= 0 ? document.getElementById("input").value = '"'+node.label+'" ' : document.getElementById("input").value = node.label+' ';
+}
 
-  }
+}
 
 
-  event.preventDefault();
-  var networkTopOffset = document.getElementById("mynetwork").offsetTop
-  var ord = event.pageY-networkTopOffset;
-  console.log("ORD",ord)
-  // Show contextmenu
-  $(".custom-menu").finish().toggle(100).
+event.preventDefault();
+var networkTopOffset = document.getElementById("mynetwork").offsetTop
+var ord = event.pageY-networkTopOffset;
+console.log("ORD",ord)
+// Show contextmenu
+$(".custom-menu").finish().toggle(100).
 
-  // In the right position (the mouse)
-  css({
-    top: ord + "px",
-    left: event.pageX + "px"
-  });
+// In the right position (the mouse)
+css({
+top: ord + "px",
+left: event.pageX + "px"
+});
 
 
 });*/
 /*
 this.network.on("doubleClick", async function (params) {
-  console.log('doubleClick ', params);
-  var id = params.nodes[0];
-  var existNode;
-  try{
-    existNode = module.network.body.data.nodes.get({
-      filter: function(node){
-        return (node.id == id );
-      }
-    });
-    console.log(existNode);
-    if (existNode.length != 0){
-      console.log("existe", existNode[0])
-      var params = existNode[0];
-      params.source = existNode[0].id;
-      importer(params,updateGraph)
-      fitAndFocus(existNode[0].id)
-      if(params.source.endsWith("#me")){
-        updateCurrentWebId(params.source)
-      }
-      //app.nodeChanged(existNode[0]);
-      //  app.agentVis.send('agentFileeditor', {type: "nodeChanged", node: existNode[0]});
-      //  app.agentVis.send('agentFoldermenu', {type: "nodeChanged", node: existNode[0]});
-      //  network.body.data.nodes.add(data);
-      //  var thing = this.thing;
-    }else{
-      console.log("n'existe pas")
-      //  delete data.x;
-      //  delete data.y
-      //  network.body.data.nodes.update(data);
-    }
-  }
-  catch (err){
-    console.log(err);
-  }
+console.log('doubleClick ', params);
+var id = params.nodes[0];
+var existNode;
+try{
+existNode = module.network.body.data.nodes.get({
+filter: function(node){
+return (node.id == id );
+}
+});
+console.log(existNode);
+if (existNode.length != 0){
+console.log("existe", existNode[0])
+var params = existNode[0];
+params.source = existNode[0].id;
+importer(params,updateGraph)
+fitAndFocus(existNode[0].id)
+if(params.source.endsWith("#me")){
+updateCurrentWebId(params.source)
+}
+//app.nodeChanged(existNode[0]);
+//  app.agentVis.send('agentFileeditor', {type: "nodeChanged", node: existNode[0]});
+//  app.agentVis.send('agentFoldermenu', {type: "nodeChanged", node: existNode[0]});
+//  network.body.data.nodes.add(data);
+//  var thing = this.thing;
+}else{
+console.log("n'existe pas")
+//  delete data.x;
+//  delete data.y
+//  network.body.data.nodes.update(data);
+}
+}
+catch (err){
+console.log(err);
+}
 });
 */
 }
@@ -379,27 +380,38 @@ editNode(data, cancelAction, callback) {
   data.color && data.color.background? document.getElementById('colpicbody').value = data.color.background : "";
   data.color && data.color.border? document.getElementById('colpicborder').value = data.color.border : "";*/
   var module = this;
-/*  var allAgents = Object.keys(this.agent.connections[0].transport.agents);
+  /*  var allAgents = Object.keys(this.agent.connections[0].transport.agents);
   console.log(allAgents)
   allAgents.forEach(function (agent){
-    module.agent.send(agent, "BROADCAST OUVRE NODE POPUP");
-  })*/
+  module.agent.send(agent, "BROADCAST OUVRE NODE POPUP");
+})*/
 this.agent.send("Spoggy", {action: "editNode", params:{data: data, cancelAction: cancelAction, callback: callback} })
 /*
-  $('#node-id').value = data.id || "";
-  $('#node-label').value = data.label;
-  $('#node-shape').value = data.shape || "ellipse";
-  $('#node-saveButton').onclick = this.saveNodeData.bind(this, data, callback);
-  $('#node-cancelButton').onclick = cancelAction.bind(this, callback);
-  $('#node-popUp').style.display = 'block';
-  $('#node-label').onkeyup = this.nodeNameChanged.bind(this, data, callback);*/
+$('#node-id').value = data.id || "";
+$('#node-label').value = data.label;
+$('#node-shape').value = data.shape || "ellipse";
+$('#node-saveButton').onclick = this.saveNodeData.bind(this, data, callback);
+$('#node-cancelButton').onclick = cancelAction.bind(this, callback);
+$('#node-popUp').style.display = 'block';
+$('#node-label').onkeyup = this.nodeNameChanged.bind(this, data, callback);*/
 }
 
 editEdgeWithoutDrag(data, callback){
   this.agent.send("Spoggy", {action: "editEdgeWithoutDrag", params:{data: data, callback: callback} })
 }
 
+updateEditorFromNetwork(event, properties, senderId){
+  var data = {event:event, properties: properties, senderId: senderId}
 
+  this.agent.send("Spoggy", {action: "updateEditorFromNetwork", data:data })
+}
+updateEditorFromNetworkTtl(text){
+  //  console.log(event, properties, senderId)
+  //var text = JSON.stringify(network.body.data, null, 2)
+  editor.session.setValue(text)
+  editor.format = "ttl"
+  //  document.getElementById('editeur-popUp').style.display = 'block';
+}
 
 updateGraph(message){
   console.log("update graph",message);
