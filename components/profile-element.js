@@ -2,6 +2,7 @@
 import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../js/agents/HelloAgent.js';
 import  './solid-login.js';
+import {BsButton} from 'https://unpkg.com/@lit-element-bootstrap/button';
 
 
 // Extend the LitElement base class
@@ -136,7 +137,7 @@ class ProfileElement extends LitElement {
     <ul>
     ${friends.map((f) => html`
       <li>
-      - ${f} <button @click="${this.clickFriend}" path=${f} type="text/turtle">${f}</button>
+      <bs-button primary @click="${this.clickFriend}" path=${f} type="text/turtle">${f}</bs-button>
       </li>
       `)}
       </ul>
