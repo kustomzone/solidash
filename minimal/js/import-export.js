@@ -820,7 +820,7 @@ function localname(node){
         labelU = uLabel[uLabel.length-1];
       }
     }else{
-      console.log("TODO : literal or blanknode ???", node)
+    //  console.log("TODO : literal or blanknode ???", node)
     }
     //  console.log(labelU)
     return labelU;

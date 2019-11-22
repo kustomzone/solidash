@@ -115,12 +115,12 @@ FileAgent.prototype.download = function(localPath, url) {
   }, err => { console.log(err); alert(err);} );
 }
 
-FileAgent.prototype.updateFile = function(localPath,url) {
+/*FileAgent.prototype.updateFile = function(localPath,url) {
   //only in console
   this.fileClient.uploadFile(localPath,url).then(success => {
     console.log(`Uploaded ${localPath} to ${url}.`);
   }, err => { console.log(err); alert(err);} );
-}
+}*/
 
 FileAgent.prototype.fetchAndParse = function(url,contentType) {
   this.fileClient.fetchAndParse(url, 'text/turtle').then(graph => {

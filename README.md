@@ -34,6 +34,9 @@ https://solidproject.org/for-developers/apps/tools
 @alexcorvis84 ^
 
 
+# Web components en 2019, on en est où?
+https://noti.st/lostinbrittany/PFGhIv#saaqNTN
+
 
 # [Start Bootstrap - SB Admin 2](https://startbootstrap.com/template-overviews/sb-admin-2/)
 

@@ -97,8 +97,8 @@ RdfAgent.prototype.fetchRemote = function(url) {
 var agent = this
 const source = this.store.sym(url);
   this.fetcher.load(url).then(response => {
-    console.log(response)
-    console.log(this.store)
+//    console.log(response)
+//    console.log(this.store)
     var data = statements2vis(this.store.statements)
     //  updateGraph({data:data})
         agent.send("Spoggy", {action: "updateGraph", params:{data: data} })
