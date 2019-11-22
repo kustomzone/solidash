@@ -121,13 +121,21 @@ class ProfileElement extends LitElement {
 
   }
 
+  clickFriend(e){
+    console.log(e)
+    console.log(e.target)
+    var path = e.target.getAttribute("path")
+    var type = e.target.getAttribute("type")
+      this.agent.send('Editor', {action:"updateFromPath", path:path, type:type});
+  }
+
   render() {
     const friendsList = (friends) => html`
     Friends List (${friends.length})<br>
     <ul>
     ${friends.map((f) => html`
       <li>
-      - ${f}
+      - ${f} <button @click="${this.clickFriend}" path=${f} type="unknown">${f}</button>
       </li>
       `)}
       </ul>

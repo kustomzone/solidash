@@ -59,6 +59,11 @@ class EditorElement extends LitElement {
     this.st.readFile(app.path).then(content =>{
       console.log(content)
       app.content = content;
+      var file = {}
+      file.path = app.path;
+      file.type = app.type;
+      file.content = app.content;
+      app.agent.send('Spoggy', {action:"updateFromFile", file:file});
       //  app.updateBrowser(app.folder)
     },err =>{alert(err)})
 
@@ -80,17 +85,17 @@ class EditorElement extends LitElement {
     <p>Content : ${this.type} <br>
 
 
-      ${this.type == "text/html" || this.type == "image/png" || this.type == "image/jpeg"
-        ?html`<p>Render some HTML or Png</p>
-        <a href="${this.path}" target="_blank">open ${this.path} in fullscreen</a>
-        <embed src="${this.path}"
-        style="border:5px solid lightgray" width="100%" height="400"> ... Loading </embed>
-        `
-        :html`<p>Render some other than HTML  or Png</p>
+    ${this.type == "text/html" || this.type == "image/png" || this.type == "image/jpeg"
+    ?html`<p>Render some HTML or Png</p>
+    <a href="${this.path}" target="_blank">open ${this.path} in fullscreen</a>
+    <embed src="${this.path}"
+    style="border:5px solid lightgray" width="100%" height="400">
+    `
+    :html`<p>Render some other than HTML  or Png</p>
 
-        <pre class="pre-scrollable"> ${this.content}</pre>
+    <pre class="pre-scrollable"> ${this.content}</pre>
 
-        `}
+    `}
 
 
     </p>

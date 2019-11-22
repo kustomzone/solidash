@@ -70,6 +70,7 @@ class BrowserElement extends LitElement {
     this.st.readFolder(path).then(folder =>{
       console.log(folder)
       app.folder = folder;
+      app.agent.send('Spoggy', {action:"updateFromFolder", folder:folder});
       //app.updateBrowser(app.folder)
     },err =>{alert(err)})
 
@@ -85,6 +86,7 @@ class BrowserElement extends LitElement {
       this.browse(path)
     }else{
       this.agent.send('Editor', {action:"updateFromPath", path:path, type:type});
+
     }
 
   }
@@ -129,7 +131,7 @@ render() {
 
       <p> Parent : <button @click="${this.clickInBrowser}" type="folder" path=${this.folder.parent}>${this.folder.parent}</button></p>
       <p> Current :<br>
-       ${this.folder.name}, ${this.folder.url}</p>
+      ${this.folder.name}, ${this.folder.url}</p>
       <p>
       ${folderList(this.folder.folders)}
       </p>
