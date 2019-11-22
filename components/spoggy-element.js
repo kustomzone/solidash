@@ -38,6 +38,7 @@ class SpoggyElement extends LitElement {
     this.spoggy = new Spoggy();
     this.browser= new Spoggy();
     console.log("SP",this.spoggy)
+
     this.spoggy.parle();
     this.webId = null;
     this.username = "";
@@ -153,15 +154,16 @@ class SpoggyElement extends LitElement {
     const storage = this.person.getRef(this.SPACE('storage'))
     console.log("storage",storage)
     app.publicStorage = storage + 'public/'
-  //  app.privateStorage = storage + 'private/'
-  app.browser.network.body.data.nodes.clear();
-  app.browser.network.body.data.edges.clear();
+    //  app.privateStorage = storage + 'private/'
+    app.browser.network.body.data.nodes.clear();
+    app.browser.network.body.data.edges.clear();
     var cont = app.shadowRoot.getElementById("browsernetwork")
     this.rdfAgent.fetchRemote(app.publicStorage)
-  //    this.fileAgent.readFolder(app.publicStorage)
-  //  app.dataToVis(cont, app.privateStorage, false)
-/*  var cont = app.shadowRoot.getElementById("browsernetwork")
-app.dataToVis(cont,app.publicStorage)*/
+    this.agent.send('Browser', {action:'browse', path:app.publicStorage});
+    //    this.fileAgent.readFolder(app.publicStorage)
+    //  app.dataToVis(cont, app.privateStorage, false)
+    /*  var cont = app.shadowRoot.getElementById("browsernetwork")
+    app.dataToVis(cont,app.publicStorage)*/
 
 
   }
@@ -300,8 +302,10 @@ render() {
     <link href="../vendor/visjs/dist/vis-network.css" rel="stylesheet" type="text/css">
     <style type="text/css">
     .network {
-      width: 100%;
-      height: 800px;
+      width: 400px;
+      height: 400px;
+      /*  width: 100%;
+      height: 800px;*/
       border: 1px solid lightgray;
     }
     #operation {
