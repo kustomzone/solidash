@@ -3,6 +3,7 @@ import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1'
 import { HelloAgent } from '../js/agents/HelloAgent.js';
 import  './solid-login.js';
 
+
 // Extend the LitElement base class
 class ProfileElement extends LitElement {
 
@@ -144,6 +145,9 @@ class ProfileElement extends LitElement {
     <fieldset>
     <legend>Name : ${this.name} <solid-login></solid-login></legend>
     <p>WebId : ${this.webId}</p>
+
+
+
     <p>Username : ${this.username} <solid-login></solid-login></p>
     ${friendsList(this.friends)}
     </fieldset>
