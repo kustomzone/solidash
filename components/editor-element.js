@@ -41,6 +41,11 @@ class EditorElement extends LitElement {
           app.updateFromPath(message)
 
           break;
+          case "setValue":
+          // code block
+          app.setValue(message.text)
+
+          break;
 
           default:
           // code block
@@ -85,6 +90,10 @@ class EditorElement extends LitElement {
 
   }
 
+  setValue(text){
+    this.editor.session.setValue(text)
+    this.editor.format  = "json";
+  }
 
 
   render() {
@@ -110,9 +119,7 @@ class EditorElement extends LitElement {
     :html`<p>Render some other than HTML  or Png</p>
 
     <div>
-    <pre class="pre-scrollable"> ${this.content}</pre>
-
-    <pre class="pre-scrollable" id="editor"></pre>
+    <pre class="pre-scrollable" id="editor"> ${this.content}</pre>
     </div>
     <!--  </div>-->
     <div>

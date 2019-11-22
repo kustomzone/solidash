@@ -469,6 +469,7 @@ nouveau(){
 
 updateEditorFromNetwork(event, properties, senderId){
 //var event = data.event;
+var app = this
 
  var data = {
    nodes: app.spoggy.network.body.data.nodes.get({
@@ -482,8 +483,8 @@ updateEditorFromNetwork(event, properties, senderId){
      }
    }) };
    var text = JSON.stringify(data, null, 2)
-   editor.session.setValue(text)
-   editor.format  = "json";
+     this.agent.send('Editor', {action: "setValue", text:text});
+
  //  document.getElementById('editeur-popUp').style.display = 'block';
  }
 
