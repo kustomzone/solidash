@@ -10,13 +10,13 @@ export class SolidTool {
   }
 
   async readFolder(url) {
-  var folder = await  this.fileClient.readFolder(url).then(folder => {
+    var folder = await  this.fileClient.readFolder(url).then(folder => {
       //  console.log(`Read ${folder.name}, it has ${folder.files.length} files & ${folder.folders.length} folders .`,folder);
       return folder;
-    //  callback? callback(folder) : defaultCallBack(folder)
+      //  callback? callback(folder) : defaultCallBack(folder)
     }, err => {
       console.log(err);
-       alert(err);
+      alert(err);
       return err
     } );
     console.log("RETURN ",folder)
@@ -24,4 +24,20 @@ export class SolidTool {
 
   }
 
-}
+
+  async readFile(url) {
+    var body =   this.fileClient.readFile(url).then(
+      body => {
+        console.log(`File content is : ${body}.`);
+        return body
+        //  callback? callback(body) : defaultCallBack(body)
+      }, err => {
+        console.log(err);
+        alert(err);
+        return (err)
+      } );
+      return body
+    }
+
+
+  }

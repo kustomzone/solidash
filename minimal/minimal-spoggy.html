@@ -30,33 +30,46 @@
   <script type="module" src="../js/helpers/messages-element.js"></script>
   <script type="module" src="../components/spoggy-element.js"></script>
   <script type="module" src="../components/browser-element.js"></script>
+  <script type="module" src="../components/editor-element.js"></script>
 
 
 
   <script type="module" src="./js/main.js"></script>
 </head>
 <body>
-  Before
-  <spoggy-element
-  name="Spoggy"
-  message="my message"
-  other = "other attribute">
-  Spoggy Loading ...
-</spoggy-element>
-<br>
-After<br>
+
+  <table>
+    <tr>
+      <td>
+        <browser-element
+        name="Browser"
+        message="my message"
+        other = "other attribute">
+        Browser Loading ...
+      </browser-element>
+    </td>
+    <td>
+      <spoggy-element
+      name="Spoggy"
+      message="my message"
+      other = "other attribute">
+      Spoggy Loading ...
+    </spoggy-element>
+  </td>
+  <td>
+    <editor-element
+    name="Editor">
+    Editor Loading ...
+  </editor-element>
+</td>
+</tr>
+</table>
 <hr>
 
-Before browser
-<browser-element
-name="Browser"
-message="my message"
-other = "other attribute">
-Browser Loading ...
-</browser-element>
-<br>
-After Browser<br>
-<hr>
+
+
+</hr>
+
 
 Messages Before
 

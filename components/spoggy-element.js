@@ -349,7 +349,9 @@ render() {
     <script type="text/javascript" src="./js/import-export.js"></script>
     <script type="text/javascript" src="./js/spoggy.js"></script>
     <script type="text/javascript" src="./js/solid.js"></script>-->
-    <p>Name : ${this.name}</p>
+
+    <fieldset>
+    <legend>${this.name}</legend>
     <p>WebId : ${this.webId}</p>
     <p>Username : ${this.username} <solid-login></solid-login></p>
     ${friendsList(this.friends)}
@@ -398,9 +400,7 @@ render() {
     <div class="network" id="browsernetwork" bgcolor="#E6E6FA">  </div>
 
     <br>
-
-    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
-
+</fieldset>
     `;
   }
 
