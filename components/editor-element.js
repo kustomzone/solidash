@@ -56,16 +56,21 @@ class EditorElement extends LitElement {
     var app = this;
     app.path = data.path
     app.type = data.type
-    this.st.readFile(app.path).then(content =>{
-      console.log(content)
-      app.content = content;
-      var file = {}
-      file.path = app.path;
-      file.type = app.type;
-      file.content = app.content;
-      app.agent.send('Spoggy', {action:"updateFromFile", file:file});
-      //  app.updateBrowser(app.folder)
-    },err =>{alert(err)})
+    try{
+      this.st.readFile(app.path).then(content =>{
+        console.log(content)
+        app.content = content;
+        var file = {}
+        file.path = app.path;
+        file.type = app.type;
+        file.content = app.content;
+        app.agent.send('Spoggy', {action:"updateFromFile", file:file});
+        //  app.updateBrowser(app.folder)
+      },err =>{alert(err)})
+    }catch(e){
+      console.log(e)
+    }
+
 
   }
 

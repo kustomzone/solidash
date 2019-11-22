@@ -53,7 +53,7 @@ class SpoggyElement extends LitElement {
     this.agent = new HelloAgent(this.name);
 
     this.agent.receive = function(from, message) {
-      console.log(this.id+" RECEIVE "+JSON.stringify(message))
+    //  console.log(this.id+" RECEIVE "+JSON.stringify(message))
       if (message.hasOwnProperty("webId")){
         app.webId = message.webId
         var cont = app.shadowRoot.getElementById("browsernetwork")

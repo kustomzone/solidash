@@ -68,7 +68,7 @@ class BrowserElement extends LitElement {
     console.log("UPDATE BROWSER TO ",path)
     this.path = path;
     this.st.readFolder(path).then(folder =>{
-      console.log(folder)
+    //  console.log(folder)
       app.folder = folder;
       app.agent.send('Spoggy', {action:"updateFromFolder", folder:folder});
       //app.updateBrowser(app.folder)
@@ -89,6 +89,12 @@ class BrowserElement extends LitElement {
 
     }
 
+  }
+
+  inputUpdated(){
+    var path = this.shadowRoot.getElementById("current").value;
+    var type = "folder"
+    this.browse(path)
   }
 
   /*
@@ -131,7 +137,9 @@ render() {
 
       <p> Parent : <button @click="${this.clickInBrowser}" type="folder" path=${this.folder.parent}>${this.folder.parent}</button></p>
       <p> Current :<br>
-      ${this.folder.name}, ${this.folder.url}</p>
+      <input id="current" value="${this.folder.url}">
+      <button @click="${this.inputUpdated}">Update</button>
+      </p>
       <p>
       ${folderList(this.folder.folders)}
       </p>

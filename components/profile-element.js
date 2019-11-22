@@ -135,7 +135,7 @@ class ProfileElement extends LitElement {
     <ul>
     ${friends.map((f) => html`
       <li>
-      - ${f} <button @click="${this.clickFriend}" path=${f} type="unknown">${f}</button>
+      - ${f} <button @click="${this.clickFriend}" path=${f} type="text/turtle">${f}</button>
       </li>
       `)}
       </ul>

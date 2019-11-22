@@ -28,7 +28,7 @@ export class SolidTool {
   async readFile(url) {
     var body =   this.fileClient.readFile(url).then(
       body => {
-        console.log(`File content is : ${body}.`);
+      //  console.log(`File content is : ${body}.`);
         return body
         //  callback? callback(body) : defaultCallBack(body)
       }, err => {
