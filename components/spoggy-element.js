@@ -185,7 +185,7 @@ class SpoggyElement extends LitElement {
     this.shadowRoot.getElementById('node-label').value = data.label;
     //  this.shadowRoot.getElementById('node-shape').value = data.shape || "ellipse";
     this.shadowRoot.getElementById('node-saveButton').onclick = this.saveNodeData.bind(this, data, callback);
-    this.shadowRoot.getElementById('node-cancelButton').onclick = this.cancelAction.bind(this, callback);
+  //  this.shadowRoot.getElementById('node-cancelButton').onclick = this.cancelAction.bind(this, callback);
     this.shadowRoot.getElementById('nodePopUp').style.display = 'block';
     this.shadowRoot.getElementById('node-label').onkeyup = this.nodeNameChanged.bind(this, data, callback);
   }
