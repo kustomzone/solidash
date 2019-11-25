@@ -3,6 +3,10 @@ import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1'
 import { HelloAgent } from '../js/agents/HelloAgent.js';
 import  { SolidTool } from '../js/helpers/solid-tool.js';
 
+import "https://unpkg.com/easymde/dist/easymde.min.js";
+
+
+
 // Extend the LitElement base class
 class EditorElement extends LitElement {
 
@@ -55,13 +59,20 @@ class EditorElement extends LitElement {
     };
 
     //https://ace.c9.io/#nav=api&api=editor
-    app.editor = ace.edit(this.shadowRoot.getElementById("editor"), {
+  /*  app.editor = ace.edit(this.shadowRoot.getElementById("editor"), {
       theme: "ace/theme/tomorrow_night_eighties",
       mode: "ace/mode/turtle",
       maxLines: 30,
-      wrap: true,
-      autoScrollEditorIntoView: true
-    });
+    //  wrap: true,
+    //  autoScrollEditorIntoView: true
+  });*/
+   var edit = app.shadowRoot.getElementById('editor');
+  //  console.log(edit)
+  app.editor =  new EasyMDE({
+      autoDownloadFontAwesome: false,
+      element: edit,
+      initialValue: '# EasyMDE \n Go ahead, play around with the editor! Be sure to check out **bold**, *italic* and ~~strikethrough~~ styling, [links](https://google.com) and all the other features. You can type the Markdown syntax, use the toolbar, or use shortcuts like `ctrl-b` or `cmd-b`.'
+  });
 
   }
 
@@ -79,7 +90,7 @@ class EditorElement extends LitElement {
         file.type = app.type;
         file.content = app.content;
         app.agent.send('Spoggy', {action:"updateFromFile", file:file});
-        app.editor.session.setValue(content.trim())
+        app.editor.value(content.trim())
         app.editor.format = "ttl"
         //  app.updateBrowser(app.folder)
       },err =>{alert(err)})
@@ -91,23 +102,25 @@ class EditorElement extends LitElement {
   }
 
   setValue(text){
-    this.editor.session.setValue(text)
-    this.editor.format  = "json";
+    this.editor.value(text)
+  //  this.editor.format  = "json";
   }
 
 
   render() {
     return html`
-    <style>
-    .pre-scrollable {
-      max-height: 340px;
-      overflow-y: scroll;
-    }
-    </style>
+
+  <link rel="stylesheet" href="https://unpkg.com/easymde/dist/easymde.min.css">
+  <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
+
     <fieldset>
     <legend>${this.name}</legend>
 
-    <p>Content : ${this.type} <br>
+    <p>Content : ${this.type}   </p>
+
+
+
 
 
     ${this.type == "text/html" || this.type == "image/png" || this.type == "image/jpeg"
@@ -117,12 +130,10 @@ class EditorElement extends LitElement {
     style="border:5px solid lightgray" width="100%" height="400">
     `
     :html`<p>Render some other than HTML  or Png</p>
+    <textarea  id="editor"> ${this.content}</textarea>
 
-    <div>
-    <pre class="pre-scrollable" id="editor"> ${this.content}</pre>
-    </div>
     <!--  </div>-->
-    <div>
+  <!--  <div>
     <button
     type="button"
     class="mdc-button mdc-dialog__button"
@@ -138,14 +149,14 @@ class EditorElement extends LitElement {
     onclick="openPodBrowser()">
     <span class="mdc-button__label">Enregistrer sur un POD</span>
     </button>
-    </div>
+    </div>-->
 
 
 
     `}
 
 
-    </p>
+
 
 
 
