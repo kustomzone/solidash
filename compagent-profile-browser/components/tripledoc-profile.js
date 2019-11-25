@@ -11,7 +11,7 @@ class TripledocProfile extends LitElement {
       message: { type: String },
       name: {type: String},
       count: {type: Number},
-      friends: {type: Array}
+      profile: {type: Object}
     };
   }
 
@@ -19,7 +19,7 @@ class TripledocProfile extends LitElement {
     super();
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
-    this.friends = []
+    this.profile = {name:"", friends: []}
     this.count = 0;
     this.ns = new Namespaces()
     this.th = new TripledocHelper()
@@ -60,10 +60,11 @@ class TripledocProfile extends LitElement {
       `;
 
       return html`
-      <h1>Name : ${this.name}</h1>
+      <h1>module : ${this.name}</h1>
+      <p>Name : ${this.profile.name}</p>
       <p>${this.message}</p>
       <p>${this.count}</p>
-      <p> ${friendList(this.friends)}  </p>
+      <p> ${friendList(this.profile.friends)}  </p>
 
       <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
       `;
@@ -71,9 +72,11 @@ class TripledocProfile extends LitElement {
 
     uriChanged(uri){
       console.log(uri)
-      this.th.getProfileFromCard(uri).then( profile =>{
-        this.name = profile.name;
-        this.friends = profile.friends;
+      this.th.getProfileFromCard(uri).then( p =>{
+        console.log(p)
+        this.profile = p;
+        //  this.name = profile.name;
+        //  this.friends = profile.friends;
       },err => {
         console.log(err)
       }

@@ -30,16 +30,17 @@ export class TripledocHelper {
     //  card : sans #me, webid avec #me
     let  profile = Tripledoc.fetchDocument(card).then(
       doc => {
-        console.log("doc",doc)
+
         let subject = card
         card.endsWith("#me") ? subject = card : subject = card+"#me";
-        const person = doc.getSubject(subject);
-        console.log("person ", person)
-        const name = person.getString(this.ns.FOAF("name"))
-        const friends = person.getAllRefs(this.ns.FOAF('knows'))
-        console.log("Friends",friends)
-        console.log("name",name)
-        const profile = {name: name, friends: friends}
+        let person = doc.getSubject(subject);
+        //  console.log("person ", person)
+        let name = person.getString(this.ns.FOAF("name"))
+        let friends = person.getAllRefs(this.ns.FOAF('knows'))
+        let publicTypeIndexUrls = person.getAllRefs(this.ns.SOLID('publicTypeIndex'))
+        //  console.log("Friends",friends)
+        //  console.log("name",name)
+        const profile = {name: name, friends: friends, publicTypeIndexUrls: publicTypeIndexUrls}
         return profile
       },
       err =>{
