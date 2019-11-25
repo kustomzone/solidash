@@ -53,14 +53,14 @@ class TripledocProfile extends LitElement {
     <ul>
     ${friends.map((f) => html`
       <li>
-      ${f}
+      <button @click=${this.clickFriend} uri=${f} >${f}</button>
       </li>
       `)}
       </ul>
       `;
 
       return html`
-      <p>Name : ${this.name}</p>
+      <h1>Name : ${this.name}</h1>
       <p>${this.message}</p>
       <p>${this.count}</p>
       <p> ${friendList(this.friends)}  </p>
@@ -80,6 +80,13 @@ class TripledocProfile extends LitElement {
 
     )
   }
+
+  clickFriend(event) {
+    var uri = event.target.getAttribute("uri");
+    var message = {action:"updateUriInput", uri:uri}
+    this.agent.send('Browser', message);
+  }
+
 
   clickHandler(event) {
     this.count++

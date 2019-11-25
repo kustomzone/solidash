@@ -54,7 +54,7 @@ class MessagesComponent extends LitElement {
       overflow-y: scroll;
     }
     </style>
-    <p>${this.name}</p>
+    <h1>${this.name}</h1>
     <p>${this.message}</p>
     <p>${this.count}</p>
 

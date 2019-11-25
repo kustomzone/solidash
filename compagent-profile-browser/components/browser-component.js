@@ -9,7 +9,8 @@ class BrowserComponent extends LitElement {
     return {
       message: { type: String },
       name: {type: String},
-      count: {type: Number}
+      count: {type: Number},
+      testUris :{type: Array}
     };
   }
 
@@ -18,30 +19,45 @@ class BrowserComponent extends LitElement {
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
     this.count = 0;
+    this.testUris = ["https://smag0.solid.community/profile/card#me", "https://thewebalyst.solid.community/profile/card",
 
-  }
+  ]
 
-  firstUpdated(changedProperties) {
-    var app = this;
-    this.agent = new HelloAgent(this.name);
-    this.agent.receive = function(from, message) {
-      if (message.hasOwnProperty("action")){
-        switch(message.action) {
-          case "doSomething":
-          // code block
-          app.doSomething(message.params)
-          break;
-          default:
-          // code block
-          console.log("Unknown action ",message)
-        }
+}
+
+firstUpdated(changedProperties) {
+  var app = this;
+  this.agent = new HelloAgent(this.name);
+  this.agent.receive = function(from, message) {
+    if (message.hasOwnProperty("action")){
+      switch(message.action) {
+        case "updateUriInput":
+        app.shadowRoot.getElementById("uriInput").value = message.uri
+        break;
+        default:
+        // code block
+        console.log("Unknown action ",message)
       }
-    };
-  }
+    }
+  };
+}
 
-  render() {
+render() {
+
+  const testList = (test) => html`
+  Tests (${test.length})<br>
+  <ul>
+  ${test.map((t) => html`
+    <li>
+    <button @click=${this.clickTest} uri=${t} >${t}</button>
+    </li>
+    `)}
+    </ul>
+    `;
+
+
     return html`
-    <p>${this.name}</p>
+    <h1>${this.name}</h1>
     <p>${this.message}</p>
     <p>${this.count}</p>
     <p>
@@ -50,9 +66,8 @@ class BrowserComponent extends LitElement {
     <button @click=${this.uriChanged}>Browse</button>
     </p>
     <p>
-    some uri for tests </br>
-    https://thewebalyst.solid.community/profile/card<br>
-    https://smag0.solid.community/profile/card</br>
+    click on one of the following button or type a pod card url above and click 'Browse button' </br>
+    <p> ${testList(this.testUris)}  </p>
     </p>
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
     `;
@@ -75,6 +90,10 @@ class BrowserComponent extends LitElement {
     this.agent.send('TripledocProfile', message);
   }
 
+  clickTest(event) {
+    var uri = event.target.getAttribute("uri");
+    this.shadowRoot.getElementById("uriInput").value = uri
+  }
 
 }
 
