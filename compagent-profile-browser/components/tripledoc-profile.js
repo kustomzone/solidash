@@ -10,7 +10,8 @@ class TripledocProfile extends LitElement {
     return {
       message: { type: String },
       name: {type: String},
-      count: {type: Number}
+      count: {type: Number},
+      friends: {type: Array}
     };
   }
 
@@ -18,6 +19,7 @@ class TripledocProfile extends LitElement {
     super();
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
+    this.friends = []
     this.count = 0;
     this.ns = new Namespaces()
     this.th = new TripledocHelper()
@@ -44,32 +46,47 @@ class TripledocProfile extends LitElement {
   }
 
   render() {
-    return html`
-    <p>Name : ${this.name}</p>
-    <p>${this.message}</p>
-    <p>${this.count}</p>
 
-    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
-    `;
-  }
 
-  uriChanged(uri){
-    console.log(uri)
-    this.th.getNameFromCard(uri).then( name =>{
-      this.name = name;
-    },err => {
-      console.log(err)
+    const friendList = (friends) => html`
+    friendList (${friends.length})<br>
+    <ul>
+    ${friends.map((f) => html`
+      <li>
+      ${f}
+      </li>
+      `)}
+      </ul>
+      `;
+
+      return html`
+      <p>Name : ${this.name}</p>
+      <p>${this.message}</p>
+      <p>${this.count}</p>
+      <p> ${friendList(this.friends)}  </p>
+
+      <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
+      `;
     }
 
-  )
-}
+    uriChanged(uri){
+      console.log(uri)
+      this.th.getProfileFromCard(uri).then( profile =>{
+        this.name = profile.name;
+        this.friends = profile.friends;
+      },err => {
+        console.log(err)
+      }
 
-clickHandler(event) {
-  this.count++
-  //console.log(event.target);
-  console.log(this.agent)
-  this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
-}
+    )
+  }
+
+  clickHandler(event) {
+    this.count++
+    //console.log(event.target);
+    console.log(this.agent)
+    this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
+  }
 }
 
 // Register the new element with the browser.

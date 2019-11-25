@@ -31,3 +31,7 @@
 </html>
 
 ```
+
+# TripledocHelper
+https://vincenttunru.gitlab.io/tripledoc/docs/cheatsheet
+https://forum.solidproject.org/t/help-using-different-libs-rdflibjs-tripledoc-ldflex-solid-file-client/2388/3?u=smag0
