@@ -1,4 +1,5 @@
-import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
+import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js';
+//import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../agents/HelloAgent.js';
 
 // Extend the LitElement base class
@@ -17,7 +18,7 @@ class ComponentModele extends LitElement {
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
     this.count = 0;
-    
+
   }
 
   firstUpdated(changedProperties) {

@@ -3,7 +3,7 @@ import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js
 import { HelloAgent } from '../agents/HelloAgent.js';
 
 // Extend the LitElement base class
-class ComponentModele extends LitElement {
+class ComponentApp extends LitElement {
 
   static get properties() {
     return {
@@ -22,21 +22,8 @@ class ComponentModele extends LitElement {
   }
 
   firstUpdated(changedProperties) {
-    var app = this;
     this.agent = new HelloAgent(this.name);
-    this.agent.receive = function(from, message) {
-      if (message.hasOwnProperty("action")){
-        switch(message.action) {
-          case "doSomething":
-          // code block
-          app.doSomething(message.params)
-          break;
-          default:
-          // code block
-          console.log("Unknown action ",message)
-        }
-      }
-    };
+    console.log(this.agent)
   }
 
   render() {
@@ -48,17 +35,13 @@ class ComponentModele extends LitElement {
     `;
   }
 
-  doSomething(params){
-    console.log(params)
-  }
-
   clickHandler(event) {
-    this.count++
-    //console.log(event.target);
-    console.log(this.agent)
-    this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
-  }
+  this.count++
+  //console.log(event.target);
+  //console.log(this.agent)
+  this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
 }
 
+}
 // Register the new element with the browser.
-customElements.define('component-modele', ComponentModele);
+customElements.define('component-app', ComponentApp);

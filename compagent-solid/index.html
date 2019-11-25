@@ -1,0 +1,29 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./vendor/lit-element/polyfill.min.js"></script>
+
+
+  <!-- tripledoc import https://forum.solidproject.org/t/help-using-different-libs-rdflibjs-tripledoc-ldflex-solid-file-client/2388/3?u=smag0 -->
+  <script src="./vendor/rdflib/rdflib.min.js"></script>
+  <script>
+  window.rdflib = window.$rdf;
+  </script>
+  <script src="./vendor/tripledoc/tripledoc.js"></script>
+  <!--<script src="https://unpkg.com/tripledoc@2.4/umd/index.js"></script>-->
+
+  <script>
+  console.log(Tripledoc)
+</script>
+<script type="module" src="./components/component-app.js"></script>
+<script type="module" src="./components/messages-component.js"></script>
+<script type="module" src="./components/tripledoc-test.js"></script>
+</head>
+<body>
+  <component-app name="App"></component-app>
+
+  <messages-component name="Messages"></messages-component>
+
+  <tripledoc-test name="TripledocTest"></tripledoc-test>
+</body>
+</html>
