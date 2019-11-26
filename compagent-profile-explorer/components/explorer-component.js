@@ -21,7 +21,7 @@ class ExplorerComponent extends LitElement {
     this.uri = ""
     this.folder = {folders: [], files: []}
     this.sfh = new SolidFileHelper()
-    console.log("SFH",this.sfh)
+    //  console.log("SFH",this.sfh)
   }
 
   firstUpdated(changedProperties) {
@@ -44,10 +44,13 @@ class ExplorerComponent extends LitElement {
 
   render() {
 
-    const folderList = (folders) => html`
-    folders (${folders.length})<br>
+    const folderList = (folder) => html`
+    folders (${folder.folders.length})<br>
     <ul>
-    ${folders.map((f) => html`
+    <li>
+    <button @click=${this.clickFolder} uri=${folder.parent} >.. (${folder.parent})</button>
+    </li>
+    ${folder.folders.map((f) => html`
       <li>
       <button @click=${this.clickFolder} uri=${f.url} >${f.name}</button>
       </li>
@@ -61,7 +64,7 @@ class ExplorerComponent extends LitElement {
       <ul>
       ${files.map((f) => html`
         <li>
-        <button @click=${this.clickFile} uri=${f} >${f.name}</button>
+        <button @click=${this.clickFile} uri=${f.url} >${f.name}</button>
         </li>
         `)}
         </ul>
@@ -72,7 +75,7 @@ class ExplorerComponent extends LitElement {
         return html`
         <h1>${this.name}</h1>
         <p> exploration de ${this.uri}</p>
-        ${folderList(this.folder.folders)}
+        ${folderList(this.folder)}
         ${fileList(this.folder.files)}
         `;
       }
@@ -85,7 +88,7 @@ class ExplorerComponent extends LitElement {
         .then(
           folder => {
             app.folder = folder
-            console.log("FOLDER",this.folder)
+            console.log("FOLDER",app.folder)
           }, err => {
             console.log(err)
           })
@@ -95,7 +98,12 @@ class ExplorerComponent extends LitElement {
         clickFolder(event) {
           var uri = event.target.getAttribute("uri");
           this.exploreFolder(uri)
+        }
 
+        clickFile(event) {
+          var uri = event.target.getAttribute("uri");
+          var message = {action:"fileUriChanged", uri:uri}
+          this.agent.send('Editor', message);
         }
 
 

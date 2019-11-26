@@ -17,6 +17,17 @@ export class SolidFileHelper {
       console.log(err) ;
       return err;
     });
-
   }
+
+  readFile(uri){
+    console.log("readFile",uri)
+    return  this.fileClient.readFile(uri).then(body => {
+         console.log(`File content is : ${body}.`);
+      return body
+    }, err => {
+      console.log(err) ;
+      return err;
+    });
+  }
+
 }
