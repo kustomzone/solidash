@@ -9,7 +9,8 @@ class EditorComponent extends LitElement {
   static get properties() {
     return {
       name: {type: String},
-      body: {type: String}
+      body: {type: String},
+      webId: {type: String}
     };
   }
 
@@ -29,6 +30,10 @@ class EditorComponent extends LitElement {
           // code block
           app.fileUriChanged(message.uri)
           break;
+          case "sessionChanged":
+          // code block
+          app.sessionChanged(message.webId)
+          break;
           default:
           // code block
           console.log("Unknown action ",message)
@@ -41,14 +46,13 @@ class EditorComponent extends LitElement {
     return html`
     <h1>${this.name}</h1>
     <p>Current File : ${this.uri}
-    <button @click=${this.clickUpdate} disabled >Save</button>
+    <button @click=${this.clickUpdate} ?disabled=${this.webId==null} >Save</button>
     </p>
     <textarea
     rows="20"
     cols="100"
     id="textarea"
     @change=${this.textareaChanged}>
-    ${this.body}
     </textarea>
 
 
@@ -90,15 +94,19 @@ class EditorComponent extends LitElement {
       //  this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
     }
 
+    sessionChanged(webId){
+      this.webId = webId
+        console.log(this.webId)
+    }
+
     clickUpdate(){
+      var app = this;
       var content = this.shadowRoot.getElementById("textarea").value
       console.log("uri",this.uri)
       this.sfh.updateFile(this.uri, content)
       .then(
-        body => {
-          app.body = body
-          app.shadowRoot.getElementById("textarea").value = body
-          console.log("File Body",app.body)
+        success => {
+      console.log( "Updated", app.uri, success)
         }, err => {
           console.log(err)
         })

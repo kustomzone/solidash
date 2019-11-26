@@ -19,7 +19,10 @@ class BrowserComponent extends LitElement {
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
     this.count = 0;
-    this.testUris = ["https://smag0.solid.community/profile/card", "https://thewebalyst.solid.community/profile/card",
+    this.testUris = [
+      "https://smag0.solid.community/profile/card",
+       "https://thewebalyst.solid.community/profile/card",
+       "https://jeffz.solid.community/profile/card"
 
   ]
 

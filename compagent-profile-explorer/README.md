@@ -44,3 +44,5 @@ window.rdflib = window.$rdf;
 </html>
 
 ```
+# a voir aussi
+https://fr.vuejs.org/v2/guide/components.html
