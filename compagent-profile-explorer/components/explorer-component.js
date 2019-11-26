@@ -11,7 +11,8 @@ class ExplorerComponent extends LitElement {
     return {
       name: {type: String},
       uri: {type: String},
-      folder: { type: Object}
+      folder: { type: Object},
+      erreur: {type : String}
     };
   }
 
@@ -19,6 +20,7 @@ class ExplorerComponent extends LitElement {
     super();
     this.name = "unknown"
     this.uri = ""
+    this.erreur = ""
     this.folder = {folders: [], files: []}
     this.sfh = new SolidFileHelper()
     //  console.log("SFH",this.sfh)
@@ -45,6 +47,10 @@ class ExplorerComponent extends LitElement {
   render() {
 
     const folderList = (folder) => html`
+
+    ${folder.folders != undefined ? html`<p>something</p>` : html`<p>not something</p>`}
+
+
     folders (${folder.folders.length})<br>
     <ul>
     <li>
@@ -75,6 +81,7 @@ class ExplorerComponent extends LitElement {
         return html`
         <h1>${this.name}</h1>
         <p> exploration de ${this.uri}</p>
+        <p>Erreur : ${this.erreur}</p>
         ${folderList(this.folder)}
         ${fileList(this.folder.files)}
         `;
@@ -82,13 +89,18 @@ class ExplorerComponent extends LitElement {
 
       exploreFolder(uri){
         var app = this
+        app.erreur = ""
         this.uri = uri
         console.log(this.uri)
         this.sfh.readFolder(this.uri)
         .then(
           folder => {
-            app.folder = folder
-            console.log("FOLDER",app.folder)
+            if (folder.url != undefined){
+              app.folder = folder
+              console.log("FOLDER",app.folder)
+            }else{
+              app.erreur = folder
+            }
           }, err => {
             console.log(err)
           })

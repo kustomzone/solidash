@@ -8,7 +8,8 @@ class EditorComponent extends LitElement {
 
   static get properties() {
     return {
-      name: {type: String}
+      name: {type: String},
+      body: {type: String}
     };
   }
 
@@ -39,10 +40,18 @@ class EditorComponent extends LitElement {
   render() {
     return html`
     <h1>${this.name}</h1>
-<pre
->
-${this.body}
-</pre>
+    <p>Current File : ${this.uri}
+    <button @click=${this.clickUpdate} disabled >Save</button>
+    </p>
+    <textarea
+    rows="20"
+    cols="100"
+    id="textarea"
+    @change=${this.textareaChanged}>
+    ${this.body}
+    </textarea>
+
+
     `;
   }
 
@@ -50,23 +59,52 @@ ${this.body}
     var app = this
     this.uri = uri
     console.log(uri)
-    this.sfh.readFile(this.uri)
-    .then(
-      body => {
-        app.body = body
-        console.log("File Body",app.body)
-      }, err => {
-        console.log(err)
-      })
-  }
+    var extension = uri.split('.').pop();
+    switch (extension) {
+      case 'json':
+      case 'html':
+      case 'ttl':
+      case 'txt':
+      case 'rdf':
+      case 'owl':
+      this.sfh.readFile(this.uri)
+      .then(
+        body => {
+          app.body = body
+          app.shadowRoot.getElementById("textarea").value = body
+          console.log("File Body",app.body)
+        }, err => {
+          console.log(err)
+        })
+        break;
+        default:
+        console.log("ce type de fichier n'est pas encore pris en compte : ",extension)
+      }
+    }
 
-  clickHandler(event) {
-    this.count++
-    //console.log(event.target);
-    console.log(this.agent)
-    this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
-  }
-}
+    textareaChanged(event) {
+      console.log("change")
+      //  this.count++
+      //console.log(event.target);
+      //  console.log(this.agent)
+      //  this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
+    }
 
-// Register the new element with the browser.
-customElements.define('editor-component', EditorComponent);
+    clickUpdate(){
+      var content = this.shadowRoot.getElementById("textarea").value
+      console.log("uri",this.uri)
+      this.sfh.updateFile(this.uri, content)
+      .then(
+        body => {
+          app.body = body
+          app.shadowRoot.getElementById("textarea").value = body
+          console.log("File Body",app.body)
+        }, err => {
+          console.log(err)
+        })
+
+      }
+    }
+
+    // Register the new element with the browser.
+    customElements.define('editor-component', EditorComponent);
