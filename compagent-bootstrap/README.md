@@ -9,7 +9,7 @@
 ttps://lit-element-bootstrap.dev
 https://github.com/nik-christou/lit-element-bootstrap
 https://www.npmjs.com/package/@lit-element-bootstrap/badge
-https://unpkg.com/@lit-element-bootstrap/badge@1.0.0/unpkg/index.bundled.js
+https://unpkg.com/@lit-element-bootstrap/badge@latest/unpkg/index.bundled.js
 
 # TripledocHelper
 https://vincenttunru.gitlab.io/tripledoc/docs/cheatsheet

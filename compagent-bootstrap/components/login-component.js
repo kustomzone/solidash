@@ -3,6 +3,7 @@ import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js
 import { HelloAgent } from '../agents/HelloAgent.js';
 import  '../vendor/solid-auth/solid-auth-client.bundle.js';
 
+import { BsButton } from '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 
 // Extend the LitElement base class
 class LoginComponent extends LitElement {
@@ -61,8 +62,8 @@ class LoginComponent extends LitElement {
   render() {
     return html`
     ${this.logged ?
-      html`<button @click=${this.logout}>Logout</button>`
-      : html`<button @click=${this.login}>Login</button>`
+      html`<bs-button danger @click=${this.logout}>Logout</bs-button>`
+      : html`<bs-button success @click=${this.login}>Login</bs-button>`
     }
     `;
   }
