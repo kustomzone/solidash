@@ -484,7 +484,6 @@ updateFromFile(file){
     break;
 
     case 'text/turtle':
-      default:
     let doc = $rdf.sym(file.uri);
     let store = $rdf.graph()
     console.log(store)
