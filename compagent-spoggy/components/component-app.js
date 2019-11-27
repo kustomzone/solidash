@@ -2,7 +2,7 @@ import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js
 //import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../agents/HelloAgent.js';
 
-import '../vendor/hammerjs/hammer.min.js';
+//import '../vendor/hammerjs/hammer.min.js';
 
 import "./messages-component.js"
 import "./tripledoc-profile.js"
@@ -42,13 +42,13 @@ class ComponentApp extends LitElement {
         }
       });
     }
-
+/*
     var footer = this.shadowRoot.getElementById("footer")
     var myOptions = {}
     var hammertime = new Hammer(footer, myOptions);
     hammertime.on('pan', function(ev) {
       console.log(ev);
-    });
+    });*/
 
 
   }

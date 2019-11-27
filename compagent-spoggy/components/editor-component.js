@@ -48,10 +48,12 @@ class EditorComponent extends LitElement {
 
   render() {
     return html`
+  
     <h1>${this.name}</h1>
     <p>Current File : ${this.uri}
     <button @click=${this.clickUpdate} ?disabled=${this.webId==null} >Save</button>
     </p>
+
     <textarea
     rows="20"
     cols="100"
@@ -90,8 +92,12 @@ class EditorComponent extends LitElement {
       }
     }
     setValue(text){
-      this.shadowRoot.getElementById("textarea").value = text
+
+  this.shadowRoot.getElementById("textarea").value = text
     }
+
+
+
 
     textareaChanged(event) {
       console.log("change")
