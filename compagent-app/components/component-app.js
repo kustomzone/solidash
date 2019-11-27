@@ -2,6 +2,8 @@ import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js
 //import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../agents/HelloAgent.js';
 
+import '../vendor/hammerjs/hammer.min.js';
+
 import "./messages-component.js"
 import "./tripledoc-profile.js"
 import "./browser-component.js"
@@ -14,13 +16,13 @@ class ComponentApp extends LitElement {
 
   static get properties() {
     return {
-        name: {type: String}
+      name: {type: String}
     };
   }
 
   constructor() {
     super();
-  this.name = "unknown"
+    this.name = "unknown"
   }
 
   firstUpdated(changedProperties) {
@@ -39,6 +41,15 @@ class ComponentApp extends LitElement {
         }
       });
     }
+
+    var footer = this.shadowRoot.getElementById("footer")
+    var myOptions = {}
+    var hammertime = new Hammer(footer, myOptions);
+    hammertime.on('pan', function(ev) {
+      console.log(ev);
+    });
+
+
   }
 
   render() {
@@ -69,15 +80,32 @@ class ComponentApp extends LitElement {
       overflow: hidden;
       background-color: #f1f1f1;
     }
+
+    .footer {
+      background-color: #bbb;
+      color: #444;
+      cursor: pointer;
+      padding: 18px;
+      width: auto;
+      border: none;
+      text-align: left;
+      outline: none;
+      font-size: 15px;
+      position: fixed;
+      bottom: 0px;
+      left: 0px;
+      right:0px;
+    }
+
     </style>
     <button type="button" class="collapsible"><h1>Login</h1></button>
     <div class="content">
-      <login-component name="Login"></login-component>
+    <login-component name="Login"></login-component>
     </div>
 
     <button type="button" class="collapsible"><h2>Browser</h2></button>
     <div class="content">
-      <browser-component name="Browser"></browser-component>
+    <browser-component name="Browser"></browser-component>
     </div>
 
     <button type="button" class="collapsible"><h1>Profile</h1></button>
@@ -98,6 +126,24 @@ class ComponentApp extends LitElement {
     <button type="button" class="collapsible"><h2>Messages</h2></button>
     <div class="content">
     <messages-component name="Messages"></messages-component>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div id ="footer" type="button" class="footer">
+
+    <div align="center">
+    <div align="left">
+    > Spoggy >>
+    </div>
+    <div align="right">
+    << Triples <
+    </div>
+    </div>
+
     </div>
     `;
   }
