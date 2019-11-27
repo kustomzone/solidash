@@ -462,6 +462,7 @@ clickHandler(event) {
   console.log(this.agent)
   this.agent.send('Messages', 'Click from SpoggyElement!');
 }
+
 nouveau(){
   this.spoggy.network.body.data.nodes.clear();
   this.spoggy.network.body.data.edges.clear();
