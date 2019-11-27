@@ -185,19 +185,19 @@ export class Spoggy {
 
       this.network.body.data.nodes.on("*", function(event, properties, senderId){
         module.updateEditorFromNetwork(event, properties, senderId)
-        console.log(event)
+      //  console.log(event)
       }
     );
     this.network.body.data.edges.on("*", function(event, properties, senderId){
 
 
       module.updateEditorFromNetwork(event, properties, senderId)
-      console.log(event)
+    //  console.log(event)
     }
   );
 
   this.network.on("click", function (e) {
-    console.log(e)
+  //  console.log(e)
     // If the clicked element is not the menu
   /*  if (!$(e.target).parents(".custom-menu").length > 0) {
       var elems = e.nodes.length+e.edges.length;

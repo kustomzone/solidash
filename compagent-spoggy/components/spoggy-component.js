@@ -6,6 +6,7 @@ import { FileAgent } from '../agents/FileAgent.js';
 
 //new
 import { Spoggy } from "../helpers/spoggy.js";
+import { statements2vis } from "../helpers/import-export.js"
 
 // Extend the LitElement base class
 class SpoggyComponent extends LitElement {
@@ -44,7 +45,7 @@ class SpoggyComponent extends LitElement {
         break;
         case "updateGraph":
         // code block
-        app.updateGraph(message.params)
+        app.spoggy.updateGraph(message.params)
         break;
         case "updateFromFolder":
         app.updateFromFolder(message.folder)
@@ -57,7 +58,7 @@ class SpoggyComponent extends LitElement {
         break;
         default:
         // code block
-        console.log("action inconnue")
+        console.log("action inconnue",message)
       }
     };
     this.init();
@@ -474,14 +475,17 @@ updateFromFolder(folder){
 
 updateFromFile(file){
   var app =this;
+  console.log(file)
   switch (file.type) {
     case 'application/json':
     var data = JSON.parse(file.content)
     app.spoggy.updateGraph({data:data})
 
     break;
+
     case 'text/turtle':
-    let doc = $rdf.sym(file.path);
+      default:
+    let doc = $rdf.sym(file.uri);
     let store = $rdf.graph()
     console.log(store)
     try {

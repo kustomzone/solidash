@@ -70,7 +70,7 @@ class ExplorerComponent extends LitElement {
       <ul>
       ${files.map((f) => html`
         <li>
-        <button @click=${this.clickFile} uri=${f.url} >${f.name}</button>
+        <button @click=${this.clickFile} uri=${f.url} type=${f.type} >${f.name}</button>
         </li>
         `)}
         </ul>
@@ -114,8 +114,11 @@ class ExplorerComponent extends LitElement {
 
         clickFile(event) {
           var uri = event.target.getAttribute("uri");
-          var message = {action:"fileUriChanged", uri:uri}
+          var type = event.target.getAttribute("type");
+          var file = {uri: uri,type:type}
+          var message = {action:"fileUriChanged", file:file}
           this.agent.send('Editor', message);
+
         }
 
 

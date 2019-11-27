@@ -2,6 +2,7 @@ import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js
 //import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../agents/HelloAgent.js';
 import { SolidFileHelper } from '../helpers/solid-file-helper.js';
+import { statements2vis } from '../helpers/import-export.js';
 
 // Extend the LitElement base class
 class EditorComponent extends LitElement {
@@ -28,7 +29,11 @@ class EditorComponent extends LitElement {
         switch(message.action) {
           case "fileUriChanged":
           // code block
-          app.fileUriChanged(message.uri)
+          app.fileUriChanged(message.file)
+          break;
+          case "folderUriChanged":
+          // code block
+          app.folderUriChanged(message.folder)
           break;
           case "sessionChanged":
           // code block
@@ -48,9 +53,10 @@ class EditorComponent extends LitElement {
 
   render() {
     return html`
-  
+
     <h1>${this.name}</h1>
-    <p>Current File : ${this.uri}
+    <p>Current File :
+    <input id="filePath" value=${this.uri} size="55">
     <button @click=${this.clickUpdate} ?disabled=${this.webId==null} >Save</button>
     </p>
 
@@ -65,11 +71,11 @@ class EditorComponent extends LitElement {
     `;
   }
 
-  fileUriChanged(uri){
+  fileUriChanged(file){
     var app = this
-    this.uri = uri
-    console.log(uri)
-    var extension = uri.split('.').pop();
+    this.uri = file.uri
+    console.log(file)
+    var extension = this.uri.split('.').pop();
     switch (extension) {
       case 'json':
       case 'html':
@@ -83,6 +89,8 @@ class EditorComponent extends LitElement {
           app.body = body
           app.shadowRoot.getElementById("textarea").value = body
           console.log("File Body",app.body)
+          file.content = body
+          this.agent.send('Spoggy', {action:"updateFromFile", file:file });
         }, err => {
           console.log(err)
         })
@@ -90,10 +98,17 @@ class EditorComponent extends LitElement {
         default:
         console.log("ce type de fichier n'est pas encore pris en compte : ",extension)
       }
-    }
-    setValue(text){
 
-  this.shadowRoot.getElementById("textarea").value = text
+    }
+
+    folderUriChanged(folder){
+      var app = this
+      this.uri = folder.uri
+    }
+
+
+    setValue(text){
+      this.shadowRoot.getElementById("textarea").value = text
     }
 
 
@@ -115,11 +130,12 @@ class EditorComponent extends LitElement {
     clickUpdate(){
       var app = this;
       var content = this.shadowRoot.getElementById("textarea").value
-      console.log("uri",this.uri)
-      this.sfh.updateFile(this.uri, content)
+      var filePath = this.shadowRoot.getElementById("filePath").value
+      console.log("uri",filePath)
+      this.sfh.updateFile(filePath, content)
       .then(
         success => {
-          console.log( "Updated", app.uri, success)
+          console.log( "Updated", filePath, success)
         }, err => {
           console.log(err)
         })

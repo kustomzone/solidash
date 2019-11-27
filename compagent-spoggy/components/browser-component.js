@@ -65,7 +65,7 @@ class BrowserComponent extends LitElement {
       <p> ${testList(this.testUris)}  </p>
       <p>
       Card or WebId :
-      <input id="uriInput" placeholder="https://mypod.solid.community/profile/card"></input>
+      <input id="uriInput" placeholder="https://mypod.solid.community/profile/card" size="35"></input>
       <button @click=${this.uriChanged}>Browse</button>
       </p>
 
