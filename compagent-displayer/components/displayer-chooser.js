@@ -47,13 +47,11 @@ class DisplayerChooser extends LitElement {
   render() {
     return html`
     <h1>${this.name}</h1>
-    <p>${this.message}</p>
-    <p>${this.count}</p>
+
     <browser-component name="Browser"></browser-component>
     <tripledoc-profile name="TripledocProfile"></tripledoc-profile>
     <explorer-component name="Explorer"></explorer-component>
 
-    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
     `;
   }
 

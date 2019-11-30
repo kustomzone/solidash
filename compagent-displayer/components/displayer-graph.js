@@ -9,7 +9,8 @@ class DisplayerGraph extends LitElement {
     return {
       message: { type: String },
       name: {type: String},
-      count: {type: Number}
+      count: {type: Number},
+      type: { type: String}
     };
   }
 
@@ -18,6 +19,7 @@ class DisplayerGraph extends LitElement {
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
     this.count = 0;
+    this.type = "unknown type"
 
   }
 
@@ -42,8 +44,8 @@ class DisplayerGraph extends LitElement {
   render() {
     return html`
     <h1>${this.name}</h1>
-    <p>${this.message}</p>
-    <p>${this.count}</p>
+
+    <p> here will be a graph of type ${this.type}</p>
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
     `;
   }
