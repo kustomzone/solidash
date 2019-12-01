@@ -20,6 +20,12 @@ import "./displayer-parser.js"
 import "./acl-component.js"
 import "./meta-component.js"
 
+import "./camera-component.js"
+import "./album-component.js"
+import "./image-component.js"
+
+import "./localization-component.js"
+
 
 
 
@@ -123,7 +129,9 @@ render() {
   <acl-component name="Acl"></acl-component>
   <meta-component name="Meta"></meta-component>
 
-
+<camera-component name="Camera"></camera-component>
+<album-component name="Album"></album-component>
+<image-component name="Image"></image-component>
 
 
   <button type="button" class="collapsible"><h1>Login</h1></button>
