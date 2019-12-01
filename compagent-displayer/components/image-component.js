@@ -9,7 +9,8 @@ class ImageComponent extends LitElement {
     return {
       message: { type: String },
       name: {type: String},
-      count: {type: Number}
+      count: {type: Number},
+      uri: {type: String}
     };
   }
 
@@ -18,6 +19,7 @@ class ImageComponent extends LitElement {
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
     this.count = 0;
+    this.uri = "";
 
   }
 
@@ -27,9 +29,9 @@ class ImageComponent extends LitElement {
     this.agent.receive = function(from, message) {
       if (message.hasOwnProperty("action")){
         switch(message.action) {
-          case "doSomething":
+          case "uriChanged":
           // code block
-          app.doSomething(message.params)
+          app.uriChanged(message.uri)
           break;
           default:
           // code block
@@ -44,15 +46,19 @@ class ImageComponent extends LitElement {
     <h1>${this.name}</h1>
     <p>${this.message}</p>
     <p>${this.count}</p>
+    <p> Here must show the image ${this.uri}</p>
+    ${this.uri != undefined ?
+      html`<img src=${this.uri} style='border:5px solid lightgray' width='100%' height='400'>`
+      : html`<p> Here must show the image ${this.uri}</p>`
+    }
+
     <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
     `;
   }
 
-  doSomething(params){
-    console.log(params)
-  /*  function isFileImage(file) {
-    return file && file['type'].split('/')[0] === 'image';
-}*/
+  uriChanged(uri){
+    console.log(uri)
+    this.uri = uri
   }
 
   clickHandler(event) {

@@ -5,6 +5,7 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 import { BsBadge } from '../vendor/@lit-element-bootstrap/bs-badge.bundle.js';
 import { BsContainer, BsRow, BsColumn, BsColumnExtraLargeCss, BsColumnExtraSmallCss,BsColumnLargeCss,BsColumnMediumCss,BsColumnSmallCss,BsContainerCss, BsRowCss } from '../vendor/@lit-element-bootstrap/bs-layout.bundle.js';
 import '../vendor/@lit-element-bootstrap/bs-card.bundle.js';
+import '../vendor/@lit-element-bootstrap/bs-navs.bundle.js'
 
 //import '../vendor/hammerjs/hammer.min.js';
 
@@ -106,7 +107,19 @@ render() {
 
 
 
+  <bs-nav tabs id="myTab" role="tablist">
+      <bs-nav-item><bs-nav-link active  id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</bs-nav-link></bs-nav-item>
+      <bs-nav-item><bs-nav-link id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Profile</bs-nav-link></bs-nav-item>
+      <bs-nav-item><bs-nav-link id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</bs-nav-link></bs-nav-item>
+      <bs-nav-item><bs-nav-link disabled>Disabled</bs-nav-link></bs-nav-item>
+  </bs-nav>
 
+
+<div class="tab-content" id="myTabContent">
+  <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">Home.</div>
+  <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">Profile.</div>
+  <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">Contact.</div>
+</div>
 
 
 

@@ -113,6 +113,7 @@ class ExplorerComponent extends LitElement {
           var messageMeta = {action:"uriChanged", uri:uri}
           this.agent.send('Acl', messageMeta);
           this.agent.send('Meta', messageMeta);
+          this.agent.send('Camera', messageMeta);
         }
 
         clickFile(event) {
@@ -124,6 +125,16 @@ class ExplorerComponent extends LitElement {
           var messageMeta = {action:"uriChanged", uri:uri}
           this.agent.send('Acl', messageMeta);
           this.agent.send('Meta', messageMeta);
+          if(file.type == "unknown" || this.isFileImage(file)){
+            this.agent.send('Image', messageMeta);
+          }
+
+
+        }
+
+
+        isFileImage(file) {
+          return file && file['type'].split('/')[0] === 'image';
         }
 
 

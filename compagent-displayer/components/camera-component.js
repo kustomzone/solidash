@@ -1,6 +1,9 @@
+// voir https://developers.google.com/web/fundamentals/media/capturing-images
+
 import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js';
 //import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../agents/HelloAgent.js';
+import { SolidFileHelper } from '../helpers/solid-file-helper.js';
 
 // Extend the LitElement base class
 class CameraComponent extends LitElement {
@@ -9,15 +12,16 @@ class CameraComponent extends LitElement {
     return {
       message: { type: String },
       name: {type: String},
-      count: {type: Number}
+      uri: {type: String}
     };
   }
 
   constructor() {
     super();
-    this.message = 'Hello world! From minimal-element';
+    this.message = 'Use your camera or your browser to post picture to Pod';
     this.name = "unknown"
-    this.count = 0;
+    this.uri = "";
+    this.sfh = new SolidFileHelper()
 
   }
 
@@ -27,9 +31,9 @@ class CameraComponent extends LitElement {
     this.agent.receive = function(from, message) {
       if (message.hasOwnProperty("action")){
         switch(message.action) {
-          case "doSomething":
+          case "uriChanged":
           // code block
-          app.doSomething(message.params)
+          app.uriChanged(message.uri)
           break;
           default:
           // code block
@@ -43,34 +47,27 @@ class CameraComponent extends LitElement {
     return html`
     <h1>${this.name}</h1>
     <p>${this.message}</p>
-    <p>${this.count}</p>
-    <input id="myFileInput" type="file" accept="image/*;capture=camera">
-
-    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
+    <p>Current folder ${this.uri} (if none, use the browser)</p>
+    <input id="myFileInput" @change=${this.sendPic} type="file" accept="image/*;capture=camera">
     `;
   }
 
-  doSomething(params){
-    console.log(params)
-    /*
-    var myInput = document.getElementById('myFileInput');
+  uriChanged(uri){
+    console.log(uri)
+    this.uri = uri
 
-    function sendPic() {
-        var file = myInput.files[0];
 
-        // Send file here either by adding it to a 'FormData' object
-        // and sending that via XHR, or by simply passing the file into
-        // the 'send' method of an XHR instance.
-    }
-
-    myInput.addEventListener('change', sendPic, false);*/
   }
 
-  clickHandler(event) {
-    this.count++
-    //console.log(event.target);
-    console.log(this.agent)
-    this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
+  sendPic(event) {
+    var file = this.shadowRoot.getElementById("myFileInput").files[0];
+    console.log("todo : send ", file)
+    var path = this.uri+file.name;
+    var content = file
+    console.log(path)
+    this.sfh.updateFile(path, content, file.type).then( res=> {
+      console.log(res);
+    }, err=>{console.log("upload error : "+err)});
   }
 }
 
