@@ -85,6 +85,9 @@ class TripledocProfile extends LitElement {
     var uri = event.target.getAttribute("uri");
     var message = {action:"exploreFolder", uri:uri}
     this.agent.send('Explorer', message);
+    var messageMeta = {action:"uriChanged", uri:uri}
+    this.agent.send('Acl', messageMeta);
+    this.agent.send('Meta', messageMeta);
   }
 
 }

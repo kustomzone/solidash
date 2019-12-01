@@ -17,6 +17,9 @@ import "./displayer-chooser.js"
 import "./displayer-graph.js"
 import "./displayer-parser.js"
 
+import "./acl-component.js"
+import "./meta-component.js"
+
 
 
 
@@ -117,7 +120,8 @@ render() {
   <displayer-graph name="PieChart" type="pie"></displayer-graph>
   <editor-component name="Editor" type="simple"></editor-component>
   <editor-component name="Editor" type="fancy"></editor-component>
-
+  <acl-component name="Acl"></acl-component>
+  <meta-component name="Meta"></meta-component>
 
 
 
@@ -126,7 +130,7 @@ render() {
   <div class="content">
   <login-component name="Login"></login-component>
   </div>
-<!--
+  <!--
   <button type="button" class="collapsible"><h2>Browser</h2></button>
   <div class="content">
   <browser-component name="Browser"></browser-component>

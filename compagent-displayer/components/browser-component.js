@@ -91,6 +91,8 @@ class BrowserComponent extends LitElement {
       var uri = this.shadowRoot.getElementById("uriInput").value.trim();
       var message = {action:"uriChanged", uri:uri}
       this.agent.send('TripledocProfile', message);
+      this.agent.send('Acl', message);
+      this.agent.send('Meta', message);
     }
 
     clickTest(event) {

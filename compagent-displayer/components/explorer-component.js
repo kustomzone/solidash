@@ -110,6 +110,9 @@ class ExplorerComponent extends LitElement {
         clickFolder(event) {
           var uri = event.target.getAttribute("uri");
           this.exploreFolder(uri)
+          var messageMeta = {action:"uriChanged", uri:uri}
+          this.agent.send('Acl', messageMeta);
+          this.agent.send('Meta', messageMeta);
         }
 
         clickFile(event) {
@@ -118,7 +121,9 @@ class ExplorerComponent extends LitElement {
           var file = {uri: uri,type:type}
           var message = {action:"fileUriChanged", file:file}
           this.agent.send('Editor', message);
-
+          var messageMeta = {action:"uriChanged", uri:uri}
+          this.agent.send('Acl', messageMeta);
+          this.agent.send('Meta', messageMeta);
         }
 
 
