@@ -2,6 +2,9 @@ import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js
 //import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../agents/HelloAgent.js';
 
+import { Namespaces } from '../helpers/namespaces.js';
+import { TripledocHelper } from '../helpers/tripledoc-helper.js';
+
 // Extend the LitElement base class
 class AclComponent extends LitElement {
 
@@ -19,7 +22,10 @@ class AclComponent extends LitElement {
     this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
     this.count = 0;
-    this.uri = ""
+    this.uri = "";
+    this.ns = new Namespaces()
+    this.th = new TripledocHelper()
+    console.log("TRIPLEDOC",this.th)
 
   }
 
@@ -54,6 +60,8 @@ class AclComponent extends LitElement {
   uriChanged(uri){
     console.log(uri)
     this.uri = uri
+    var acl = this.th.getAcl(uri)
+    console.log("acl",acl)
   }
 
   clickHandler(event) {

@@ -1,3 +1,5 @@
+// see also https://www.npmjs.com/package/tripledoc-solid-helpers
+
 import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js';
 //import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../agents/HelloAgent.js';
@@ -64,7 +66,7 @@ class TripledocProfile extends LitElement {
     uriChanged(uri){
       console.log(uri)
       this.th.getProfileFromCard(uri).then( p =>{
-        console.log(p)
+        console.log("PROFILE",p)
         this.profile = p;
         //  this.name = profile.name;
         //  this.friends = profile.friends;

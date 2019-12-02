@@ -8,6 +8,7 @@ export class TripledocHelper {
 
   getNameFromCard(card){
     //  var module = this;
+    console.log(Tripledoc)
     var name = Tripledoc.fetchDocument(card).then(
       doc => {
         console.log("doc",doc)
@@ -28,8 +29,10 @@ export class TripledocHelper {
 
   getProfileFromCard(card){
     //  card : sans #me, webid avec #me
+    console.log(Tripledoc)
     let  profile = Tripledoc.fetchDocument(card).then(
       doc => {
+        console.log("doc",doc)
         var profile = {}
         let subject = card
         card.endsWith("#me") ? subject = card : subject = card+"#me";
@@ -50,6 +53,32 @@ export class TripledocHelper {
       }
     );
     return profile;
+  }
+
+  getAcl(uri){
+    //  var module = this;
+    console.log(Tripledoc)
+    let  acl = Tripledoc.fetchDocument(uri).then(
+      doc => {
+        console.log("doc",doc)
+
+          doc.getAclRef().then(
+            acl => {
+                console.log("acl In ", acl)
+            },
+            err =>{
+              console.log(err)
+            }
+          )
+
+    return acl
+      },
+      err =>{
+        console.log("erreur ",err)
+        return err
+      }
+    );
+    return acl;
   }
 
 
