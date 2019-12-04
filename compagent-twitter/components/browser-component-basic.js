@@ -2,8 +2,6 @@ import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js
 //import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../agents/HelloAgent.js';
 
-import  '../vendor/@lit-element-bootstrap/bs-list-group.bundle.js';
-
 // Extend the LitElement base class
 class BrowserComponent extends LitElement {
 
@@ -59,11 +57,13 @@ class BrowserComponent extends LitElement {
 
     const testList = (test) => html`
     Pods (${test.length})<br>
-    <bs-list-group-action>
+    <ul>
     ${test.map((t) => html`
-      <bs-list-group-item-action-button @click=${this.clickTest} uri=${t} >${t}</bs-list-group-item-action-button>
+      <li>
+      <button @click=${this.clickTest} uri=${t} >${t}</button>
+      </li>
       `)}
-      </bs-list-group-action>
+      </ul>
       `;
 
 
@@ -71,12 +71,6 @@ class BrowserComponent extends LitElement {
       <div>
       ${this.message} <br>
       <p> ${testList(this.testUris)}  </p>
-
-
-
-
-
-
       <p>
       Card or WebId :
       <input id="uriInput" placeholder="https://mypod.solid.community/profile/card"  value="${this.testUris[0]}" size="35"></input>

@@ -2,7 +2,6 @@ import { LitElement, css,  html } from '../vendor/lit-element/lit-element.min.js
 //import { LitElement, css,  html } from 'https://cdn.pika.dev/lit-element/^2.2.1';
 import { HelloAgent } from '../agents/HelloAgent.js';
 import  '../vendor/solid-auth/solid-auth-client.bundle.js';
-import  '../vendor/@lit-element-bootstrap/bs-button.bundle.js';
 
 
 // Extend the LitElement base class
@@ -65,8 +64,8 @@ class LoginComponent extends LitElement {
     return html`
     ${this.logged ?
       html`
-      <bs-button warning @click=${this.logout}>Logout ${this.webId}</bs-button>`
-      : html`<bs-button success @click=${this.login}>Login</bs-button>`
+      <button @click=${this.logout}>Logout ${this.webId}</button>`
+      : html`<button @click=${this.login}>Login</button>`
     }
     `;
   }
