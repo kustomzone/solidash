@@ -29,9 +29,9 @@ class EditorComponent extends LitElement {
     this.agent.receive = function(from, message) {
       if (message.hasOwnProperty("action")){
         switch(message.action) {
-          case "fileUriChanged":
+          case "fileChanged":
           // code block
-          app.fileUriChanged(message.file)
+          app.fileChanged(message.file)
           break;
           case "folderUriChanged":
           // code block
@@ -76,7 +76,7 @@ ${this.type == "simple"
     `;
   }
 
-  fileUriChanged(file){
+  fileChanged(file){
     var app = this
     this.uri = file.uri
     console.log(file)

@@ -7,12 +7,16 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 // default components
 import "./messages-component.js"
 
-import "./editor-component.js"
+//import "./editor-component.js"
 import "./login-component.js"
-import "./spoggy-component.js"
+import "./browser-component.js"
+import "./tripledoc-profile.js"
+import "./explorer-component.js"
+
+//import "./spoggy-component.js"
 
 // Displayer
-import "./displayer-chooser.js"
+/*import "./displayer-chooser.js"
 //import "./displayer-editor.js"
 import "./displayer-graph.js"
 import "./displayer-parser.js"
@@ -22,9 +26,9 @@ import "./meta-component.js"
 
 import "./camera-component.js"
 import "./album-component.js"
-import "./image-component.js"
 
-import "./localization-component.js"
+
+import "./localization-component.js"*/
 
 
 
@@ -124,12 +128,12 @@ render() {
   <browser-component name="Browser"></browser-component>
   <tripledoc-profile name="TripledocProfile"></tripledoc-profile>
   <explorer-component name="Explorer"></explorer-component>
-  
 
-  <camera-component name="Camera"></camera-component>
-  <editor-component name="Editor" type="simple"></editor-component>
-  <album-component name="Album"></album-component>
-  <image-component name="Image"></image-component>
+
+
+<!--  <editor-component name="Editor" type="simple"></editor-component>
+  <album-component name="Album"></album-component>-->
+
 
   <!--
   <displayer-chooser name="Chooser"></displayer-chooser>

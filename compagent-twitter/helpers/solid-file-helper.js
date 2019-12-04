@@ -15,6 +15,7 @@ export class SolidFileHelper {
       return folder
     }, err => {
       console.log(err) ;
+      alert(err)
       return err;
     });
   }
@@ -27,7 +28,7 @@ export class SolidFileHelper {
       return folder
     }, err => {
       console.log(err) ;
-      alert("ERR",err)
+    alert(err)
       return err;
     });
   }
@@ -40,6 +41,7 @@ export class SolidFileHelper {
       return body
     }, err => {
       console.log(err) ;
+        alert(err)
       return err;
     });
   }
@@ -51,6 +53,7 @@ export class SolidFileHelper {
         return success
       }, err => {
         console.log(err)
+          alert(err)
         return err
       });
     }

@@ -7,19 +7,15 @@ class ImageComponent extends LitElement {
 
   static get properties() {
     return {
-      message: { type: String },
       name: {type: String},
-      count: {type: Number},
-      uri: {type: String}
+      file: {type: Object}
     };
   }
 
   constructor() {
     super();
-    this.message = 'Hello world! From minimal-element';
     this.name = "unknown"
-    this.count = 0;
-    this.uri = "";
+    this.file = {};
 
   }
 
@@ -29,9 +25,10 @@ class ImageComponent extends LitElement {
     this.agent.receive = function(from, message) {
       if (message.hasOwnProperty("action")){
         switch(message.action) {
-          case "uriChanged":
+          case "fileChanged":
           // code block
-          app.uriChanged(message.uri)
+          console.log(message)
+          app.fileChanged(message.file)
           break;
           default:
           // code block
@@ -43,30 +40,21 @@ class ImageComponent extends LitElement {
 
   render() {
     return html`
-    <h1>${this.name}</h1>
-    <p>${this.message}</p>
-    <p>${this.count}</p>
-    <p> Here must show the image ${this.uri}</p>
-    ${this.uri != undefined ?
-      html`<img src=${this.uri} style='border:5px solid lightgray' width='100%' height='400'>`
-      : html`<p> Here must show the image ${this.uri}</p>`
+<!--    <h1>${this.name}</h1>
+    uri  ${this.file.uri}, type: ${this.file.type}-->
+    ${this.file.uri != undefined ?
+      html`<img src=${this.file.uri} style='border:5px solid lightgray' style="max-width:'400';max-height='400'">`
+      : html`<p> Here must show the image ${this.file.uri}</p>`
     }
 
-    <button @click=${this.clickHandler}>Test Agent from ${this.name} in lithtml</button>
     `;
   }
 
-  uriChanged(uri){
-    console.log(uri)
-    this.uri = uri
+  fileChanged(file){
+    console.log(file)
+    this.file = file
   }
 
-  clickHandler(event) {
-    this.count++
-    //console.log(event.target);
-    console.log(this.agent)
-    this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
-  }
 }
 
 // Register the new element with the browser.
