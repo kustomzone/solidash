@@ -10,13 +10,15 @@ class TwitComponent extends LitElement {
 
   static get properties() {
     return {
-      name: {type: String}
+      name: {type: String},
+      uri: {type: String}
     };
   }
 
   constructor() {
     super();
     this.name = "unknown"
+    this.uri = "rien"
   }
 
   firstUpdated(changedProperties) {
@@ -127,13 +129,12 @@ class TwitComponent extends LitElement {
     <div class="modal-content">
     <div class="modal-header">
     <span class="close" @click=${this.modalClose}>&times;</span>
-    <h2>Modal Header</h2>
+    <h2>Twitpod</h2>
     </div>
-    <div class="modal-body">
-    <p>Some text in the Modal Body</p>
-    <p>Some other text...</p>
-    <editor-component name="EditorTwit"></editor-component>
-    <camera-component name="Camera"></camera-component>
+    <div> </div>
+    <div class="modal-body" style="height: 50vw; overflow-y: scroll;">
+    <editor-component name="EditorTwit" uri=${this.uri}></editor-component>
+    <camera-component name="Camera" uri=${this.uri}></camera-component>
     </div>
     <div class="modal-footer">
     <h3>Modal Footer</h3>

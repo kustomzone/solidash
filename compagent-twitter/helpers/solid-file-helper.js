@@ -50,7 +50,7 @@ export class SolidFileHelper {
     return this.fileClient.updateFile( url, newContent, contentType ).then(
       success => {
         console.log( `Updated ${url}.`)
-        return success
+        return `Updated ${url}.`
       }, err => {
         console.log(err)
           alert(err)

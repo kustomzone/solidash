@@ -12,7 +12,8 @@ class CameraComponent extends LitElement {
     return {
       message: { type: String },
       name: {type: String},
-      uri: {type: String}
+      uri: {type: String},
+      res: {type: String}
     };
   }
 
@@ -22,6 +23,7 @@ class CameraComponent extends LitElement {
     this.name = "unknown"
     this.uri = "";
     this.sfh = new SolidFileHelper()
+    this.res = ""
 
   }
 
@@ -49,17 +51,17 @@ class CameraComponent extends LitElement {
     <p>${this.message}</p>
     <p>Current folder ${this.uri} (if none, use the browser)</p>
     <input id="myFileInput" @change=${this.sendPic} type="file" accept="image/*;capture=camera">
+    <br>${this.res}
     `;
   }
 
   uriChanged(uri){
     console.log(uri)
     this.uri = uri
-
-
   }
 
   sendPic(event) {
+    var app = this
     var file = this.shadowRoot.getElementById("myFileInput").files[0];
     console.log("todo : send ", file)
     var path = this.uri+file.name;
@@ -67,6 +69,7 @@ class CameraComponent extends LitElement {
     console.log(path)
     this.sfh.updateFile(path, content, file.type).then( res=> {
       console.log(res);
+      app.res = res
     }, err=>{console.log("upload error : "+err)});
   }
 }

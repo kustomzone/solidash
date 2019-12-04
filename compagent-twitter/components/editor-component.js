@@ -12,7 +12,10 @@ class EditorComponent extends LitElement {
       name: {type: String},
       body: {type: String},
       webId: {type: String},
-      type: {type: String}
+      type: {type: String},
+      //  uri: {type:String},
+      folderPath: {type: String},
+      fileName: {type: String}
     };
   }
 
@@ -20,7 +23,11 @@ class EditorComponent extends LitElement {
     super();
     this.name = "unknown"
     this.type = "simple"
+    this.folderPath = ""
+    this.fineName = ""
+    //  this.uri = ""
     this.sfh = new SolidFileHelper()
+
   }
 
   firstUpdated(changedProperties) {
@@ -36,6 +43,10 @@ class EditorComponent extends LitElement {
           case "folderUriChanged":
           // code block
           app.folderUriChanged(message.folder)
+          break;
+          case "uriChanged":
+          // code block
+          app.uriChanged(message.uri)
           break;
           case "sessionChanged":
           // code block
@@ -58,95 +69,115 @@ class EditorComponent extends LitElement {
 
     <h1>${this.name}</h1>
     <p>Current File :
-    <input id="filePath" value=${this.uri} size="55">
-    <button @click=${this.clickUpdate} ?disabled=${this.webId==null} >Save</button>
+    <input id="folderPath" placehoder="folderPath" value=${this.folderPath} size="55">
+    <input id="fileName" placehoder="fileName" value=${this.fileName}  size="20">
+    <button @click=${this.clickUpdate}>Save</button>
+    <!--<button @click=${this.clickUpdate} ?disabled=${this.webId==null} >Save</button>-->
     </p>
-${this.type == "simple"
-? html`<textarea
-  rows="20"
-  cols="100"
-  id="textarea"
-  @change=${this.textareaChanged}>
-  </textarea>`
-  : html`place of the Fancy Editor`
+    ${this.type == "simple"
+    ? html`<textarea
+    rows="20"
+    cols="100"
+    id="textarea"
+    @change=${this.textareaChanged}>
+    </textarea>`
+    : html`place of the Fancy Editor`
+  }
+
+
+
+  `;
 }
 
 
+uriChanged(uri){
+  console.log(uri)
+  this.fileName = uri.substr(uri.lastIndexOf('/') + 1)
+  this.folderPath = uri.substr(0,uri.lastIndexOf('/') + 1)
+  console.log(this.folderPath,this.folderPath)
+  //  this.uri = uri
+}
 
-    `;
+fileChanged(file){
+  var app = this
+  var uri = file.uri
+  this.fileName = uri.substr(uri.lastIndexOf('/') + 1)
+  this.folderPath = uri.substr(0,uri.lastIndexOf('/') + 1)
+  console.log(this.folderPath,this.folderPath)
+  console.log(file)
+  var extension = this.fileName.split('.').pop();
+  switch (extension) {
+    case 'json':
+    case 'html':
+    case 'ttl':
+    case 'txt':
+    case 'rdf':
+    case 'owl':
+    this.sfh.readFile(file.uri)
+    .then(
+      body => {
+        app.body = body
+        app.shadowRoot.getElementById("textarea").value = body
+        console.log("File Body",app.body)
+        file.content = body
+        this.agent.send('Spoggy', {action:"updateFromFile", file:file });
+      }, err => {
+        console.log(err)
+      })
+      break;
+      default:
+      console.log("ce type de fichier n'est pas encore pris en compte : ",extension)
+    }
+
   }
 
-  fileChanged(file){
-    var app = this
-    this.uri = file.uri
-    console.log(file)
-    var extension = this.uri.split('.').pop();
-    switch (extension) {
-      case 'json':
-      case 'html':
-      case 'ttl':
-      case 'txt':
-      case 'rdf':
-      case 'owl':
-      this.sfh.readFile(this.uri)
-      .then(
-        body => {
-          app.body = body
-          app.shadowRoot.getElementById("textarea").value = body
-          console.log("File Body",app.body)
-          file.content = body
-          this.agent.send('Spoggy', {action:"updateFromFile", file:file });
-        }, err => {
-          console.log(err)
-        })
-        break;
-        default:
-        console.log("ce type de fichier n'est pas encore pris en compte : ",extension)
-      }
+  folderUriChanged(folder){
+    this.fileName = uri.substr(uri.lastIndexOf('/') + 1)
+    this.folderPath = uri.substr(0,uri.lastIndexOf('/') + 1)
+    console.log(this.folderPath,this.folderPath)
+  }
+
+
+  setValue(text){
+    this.shadowRoot.getElementById("textarea").value = text
+  }
+
+
+
+
+  textareaChanged(event) {
+    console.log("change")
+    //  this.count++
+    //console.log(event.target);
+    //  console.log(this.agent)
+    //  this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
+  }
+
+  sessionChanged(webId){
+    this.webId = webId
+    console.log(this.webId)
+  }
+
+  clickUpdate(){
+    var app = this;
+    var content = this.shadowRoot.getElementById("textarea").value.trim()
+    var folderPath = this.shadowRoot.getElementById("folderPath").value.trim()
+    var fileName = this.shadowRoot.getElementById("fileName").value.trim()
+
+    var uri = folderPath+fileName;
+    console.log("uri",uri)
+    this.sfh.updateFile(uri, content)
+    .then(
+      success => {
+        console.log( "Updated", uri, success)
+        alert( "Updated", uri, success)
+      }, err => {
+        console.log(err)
+        alert(err)
+      })
 
     }
+  }
 
-    folderUriChanged(folder){
-      var app = this
-      this.uri = folder.uri
-    }
-
-
-    setValue(text){
-      this.shadowRoot.getElementById("textarea").value = text
-    }
-
-
-
-
-    textareaChanged(event) {
-      console.log("change")
-      //  this.count++
-      //console.log(event.target);
-      //  console.log(this.agent)
-      //  this.agent.send('Messages', "Information pour l'utilisateur n°"+this.count);
-    }
-
-    sessionChanged(webId){
-      this.webId = webId
-      console.log(this.webId)
-    }
-
-    clickUpdate(){
-      var app = this;
-      var content = this.shadowRoot.getElementById("textarea").value
-      var filePath = this.shadowRoot.getElementById("filePath").value
-      console.log("uri",filePath)
-      this.sfh.updateFile(filePath, content)
-      .then(
-        success => {
-          console.log( "Updated", filePath, success)
-        }, err => {
-          console.log(err)
-        })
-
-      }
-    }
-
-    // Register the new element with the browser.
-    customElements.define('editor-component', EditorComponent);
+  // Register the new element with the browser.
+  customElements.define('editor-component', EditorComponent);

@@ -75,8 +75,10 @@ class ExplorerComponent extends LitElement {
 
 
       const fileList = (files) => html`
-      Files (${files.length}) <input id="newFileInput" placeholder="newfilename.ttl"></input> <button @click=${this.newFile}>New File</button>
-       <twit-component name="Twit"></twit-component><br>
+      Files (${files.length})
+       <twit-component name="Twit" uri=${this.uri}></twit-component>
+       <!--<input id="newFileInput" placeholder="newfilename.ttl"></input>
+       <button @click=${this.newFile} disabled>New File</button>--><br>
       <ul>
       ${files.map((f) => html`
         <li>
@@ -129,6 +131,11 @@ class ExplorerComponent extends LitElement {
           folder => {
             if (folder.url != undefined){
               app.folder = folder
+              var messageMeta = {action:"uriChanged", uri:uri}
+              app.agent.send('Acl', messageMeta);
+              app.agent.send('Meta', messageMeta);
+              app.agent.send('EditorTwit', messageMeta);
+              app.agent.send('Camera', messageMeta);
               //  console.log("FOLDER",app.folder)
             }else{
               app.erreur = folder
@@ -142,10 +149,9 @@ class ExplorerComponent extends LitElement {
         clickFolder(event) {
           var uri = event.target.getAttribute("uri");
           this.exploreFolder(uri)
-          var messageMeta = {action:"uriChanged", uri:uri}
-          this.agent.send('Acl', messageMeta);
-          this.agent.send('Meta', messageMeta);
-          this.agent.send('Camera', messageMeta);
+
+
+
         }
 
         clickFile(event) {
