@@ -40,10 +40,14 @@ class ImageComponent extends LitElement {
 
   render() {
     return html`
-<!--    <h1>${this.name}</h1>
+    <!--    <h1>${this.name}</h1>
     uri  ${this.file.uri}, type: ${this.file.type}-->
     ${this.file.uri != undefined ?
-      html`<img src=${this.file.uri} style='border:5px solid lightgray' style="max-width:'400';max-height='400'">`
+      html`
+      <a href="${this.file.uri}" target="_blank">
+      <img src=${this.file.uri} style='border:5px solid lightgray;max-width:400;max-height=400'>
+      </a>
+      `
       : html`<p> Here must show the image ${this.file.uri}</p>`
     }
 

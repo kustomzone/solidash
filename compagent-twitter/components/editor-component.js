@@ -92,6 +92,7 @@ class EditorComponent extends LitElement {
 
 uriChanged(uri){
   console.log(uri)
+  this.uri = uri
   this.fileName = uri.substr(uri.lastIndexOf('/') + 1)
   this.folderPath = uri.substr(0,uri.lastIndexOf('/') + 1)
   console.log(this.folderPath,this.folderPath)
@@ -100,11 +101,7 @@ uriChanged(uri){
 
 fileChanged(file){
   var app = this
-  var uri = file.uri
-  this.fileName = uri.substr(uri.lastIndexOf('/') + 1)
-  this.folderPath = uri.substr(0,uri.lastIndexOf('/') + 1)
-  console.log(this.folderPath,this.folderPath)
-  console.log(file)
+  this.uriChanged(file.uri)
   var extension = this.fileName.split('.').pop();
   switch (extension) {
     case 'json':
@@ -132,9 +129,9 @@ fileChanged(file){
   }
 
   folderUriChanged(folder){
-    this.fileName = uri.substr(uri.lastIndexOf('/') + 1)
-    this.folderPath = uri.substr(0,uri.lastIndexOf('/') + 1)
-    console.log(this.folderPath,this.folderPath)
+    console.log("??? FOLDER",folder)
+    this.folderPath = folder.substr(0,folder.lastIndexOf('/') + 1)
+
   }
 
 
