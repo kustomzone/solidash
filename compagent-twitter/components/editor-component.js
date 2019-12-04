@@ -77,7 +77,7 @@ class EditorComponent extends LitElement {
     ${this.type == "simple"
     ? html`<textarea
     rows="20"
-    cols="100"
+    cols="50"
     id="textarea"
     @change=${this.textareaChanged}>
     </textarea>`
