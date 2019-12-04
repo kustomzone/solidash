@@ -72,7 +72,7 @@ class ExplorerComponent extends LitElement {
         <li>
 
         ${this.isFileImage(f) ?
-          html`<img src=${f.url} style='border:5px solid lightgray' width='100' height='100'>`
+          html`<img src=${f.url} style='border:5px solid lightgray' width='100' height='100' @click=${this.clickFile} uri=${f.url} type=${f.type}>`
           : html`<button @click=${this.clickFile} uri=${f.url} type=${f.type} >${f.name}</button>`
         }
 
