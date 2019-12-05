@@ -28,7 +28,6 @@ class BrowserComponent extends LitElement {
       //    "https://smag0.solid.community/profile/card",
       "https://thewebalyst.solid.community/profile/card",
       "https://jeffz.solid.community/profile/card"
-
     ]
 
   }

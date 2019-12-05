@@ -8,10 +8,11 @@ import { HelloAgent } from '../agents/HelloAgent.js';
 import "./messages-component.js"
 
 //import "./editor-component.js"
-import "./login-component.js"
+//import "./login-component.js"
 import "./browser-component.js"
 import "./tripledoc-profile.js"
 import "./explorer-component.js"
+import "./pod-chooser-component.js"
 
 //import "./spoggy-component.js"
 
@@ -124,14 +125,18 @@ render() {
 
 
 
-  <login-component name="Login"></login-component>
+  <!--<login-component name="Login"></login-component>-->
+
+  <pod-chooser-component name="PodChooser"></pod-chooser-component>
+
+
   <browser-component name="Browser"></browser-component>
   <tripledoc-profile name="TripledocProfile"></tripledoc-profile>
   <explorer-component name="Explorer"></explorer-component>
 
 
 
-<!--  <editor-component name="Editor" type="simple"></editor-component>
+  <!--  <editor-component name="Editor" type="simple"></editor-component>
   <album-component name="Album"></album-component>-->
 
 

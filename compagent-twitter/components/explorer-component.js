@@ -7,6 +7,7 @@ import { TripledocHelper } from '../helpers/tripledoc-helper.js';
 
 import "./visualization-component.js"
 import "./twit-component.js"
+import "./note-component.js"
 
 // Extend the LitElement base class
 class ExplorerComponent extends LitElement {
@@ -77,6 +78,7 @@ class ExplorerComponent extends LitElement {
       const fileList = (files) => html`
       Files (${files.length})
        <twit-component name="Twit" uri=${this.uri}></twit-component>
+       <note-component name="Note" uri=${this.uri}></note-component>
        <!--<input id="newFileInput" placeholder="newfilename.ttl"></input>
        <button @click=${this.newFile} disabled>New File</button>--><br>
       <ul>
@@ -135,6 +137,7 @@ class ExplorerComponent extends LitElement {
               app.agent.send('Acl', messageMeta);
               app.agent.send('Meta', messageMeta);
               app.agent.send('EditorTwit', messageMeta);
+              app.agent.send('EditorNote', messageMeta);
               app.agent.send('Camera', messageMeta);
               //  console.log("FOLDER",app.folder)
             }else{
