@@ -67,7 +67,7 @@ class ExplorerComponent extends LitElement {
     ${folder.folders.map((f) => html`
       <li>
       <button @click=${this.clickFolder} uri=${f.url} >${f.name}</button>
-        <button @click=${this.clickAcl} uri=${f.url} >acl</button>
+        <!--<button @click=${this.clickAcl} uri=${f.url} >acl</button> -->
       </li>
       `)}
       </ul>
@@ -87,7 +87,7 @@ class ExplorerComponent extends LitElement {
           html`<img src=${f.url} style='border:5px solid lightgray' width='50' height='50' @click=${this.clickFile} uri=${f.url} type=${f.type}>`
           : html`<button @click=${this.clickFile} uri=${f.url} type=${f.type} >${f.name}</button>`
         }
-       <button @click=${this.clickAcl} uri=${f.url} >acl</button>
+       <!--<button @click=${this.clickAcl} uri=${f.url} >acl</button>-->
 
 
 

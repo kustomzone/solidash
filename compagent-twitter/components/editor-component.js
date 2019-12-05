@@ -67,7 +67,7 @@ class EditorComponent extends LitElement {
   render() {
     return html`
 
-    <h1>${this.name}</h1>
+    <!--<h1>${this.name}</h1>-->
     <p>Current File :
     <input id="folderPath" placehoder="folderPath" value=${this.folderPath} size="55">
     <input id="fileName" placehoder="fileName" value=${this.fileName}  size="20">
@@ -77,8 +77,9 @@ class EditorComponent extends LitElement {
     ${this.type == "simple"
     ? html`<textarea
     rows="20"
-    cols="50"
+    cols="60"
     id="textarea"
+    placeholder="type here text that you want to post"
     @change=${this.textareaChanged}>
     </textarea>`
     : html`place of the Fancy Editor`

@@ -47,9 +47,10 @@ class CameraComponent extends LitElement {
 
   render() {
     return html`
-    <h1>${this.name}</h1>
+    <!--<h1>${this.name}</h1>-->
+    <hr>
     <p>${this.message}</p>
-    <p>Current folder ${this.uri} (if none, use the browser)</p>
+    <p>Current folder is ${this.uri}</p>
     <input id="myFileInput" @change=${this.sendPic} type="file" accept="image/*;capture=camera">
     <br>${this.res}
     `;
